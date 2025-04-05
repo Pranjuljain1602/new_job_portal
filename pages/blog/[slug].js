@@ -61,7 +61,7 @@ const blogPosts = [
     readTime: '8 min read',
     category: 'Interview Tips',
     tags: ['Government Jobs', 'Interview Preparation', 'Career Advice'],
-    image: 'https://images.unsplash.com/photo-1542744173-8659b8e77b29?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
+    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80'
   },
   {
     id: 2,
@@ -231,9 +231,10 @@ export default function BlogPost() {
             <Image
               src={post.image}
               alt={post.title}
-              layout="fill"
-              objectFit="cover"
-              className="opacity-25"
+              width={1770}
+              height={1180}
+              className="opacity-25 object-cover"
+              style={{ width: '100%', height: '100%' }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-gray-900 via-white/90 dark:via-gray-900/90 to-white/60 dark:to-gray-900/60"></div>
           </div>
@@ -272,7 +273,7 @@ export default function BlogPost() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
           <div className="max-w-3xl mx-auto">
             <div className="prose prose-lg dark:prose-invert prose-indigo mx-auto animate-fade-in">
-              <div dangerouslySetInnerHTML={{ __html: post.content }} />
+              <div dangerouslySetInnerHTML={{ __html: post.content }} className="text-gray-900 dark:text-gray-100" />
             </div>
 
             {/* Tags */}
@@ -350,9 +351,10 @@ export default function BlogPost() {
                           <Image
                             src={relatedPost.image}
                             alt={relatedPost.title}
-                            layout="fill"
-                            objectFit="cover"
+                            width={1770}
+                            height={1180}
                             className="transition-transform duration-300 group-hover:scale-105"
+                            style={{ width: '100%', height: '100%' }}
                           />
                           <div className="absolute top-0 right-0 m-2">
                             <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">

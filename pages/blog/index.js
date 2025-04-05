@@ -22,7 +22,7 @@ const blogPosts = [
     date: 'August 15, 2023',
     readTime: '8 min read',
     category: 'Interview Tips',
-    image: 'https://images.unsplash.com/photo-1542744173-8659b8e77b29?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
+    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80'
   },
   {
     id: 2,
@@ -70,7 +70,7 @@ const blogPosts = [
     date: 'April 18, 2023',
     readTime: '5 min read',
     category: 'Career Strategy',
-    image: 'https://images.unsplash.com/photo-1553358667-14923c9d3a25?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80'
+    image: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80'
   },
   {
     id: 6,
@@ -118,9 +118,10 @@ export default function Blog() {
             <Image
               src={featuredPost.image}
               alt={featuredPost.title}
-              layout="fill"
-              objectFit="cover"
-              className="opacity-25"
+              width={1770}
+              height={1180}
+              className="opacity-25 object-cover"
+              style={{ width: '100%', height: '100%' }}
             />
           </div>
           <div className="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
@@ -193,9 +194,10 @@ export default function Blog() {
                     <Image
                       src={post.image}
                       alt={post.title}
-                      layout="fill"
-                      objectFit="cover"
-                      className="transition-transform duration-300 hover:scale-105"
+                      width={1770}
+                      height={1180}
+                      className="transition-transform duration-300 hover:scale-105 object-cover"
+                      style={{ width: '100%', height: '100%' }}
                     />
                     <div className="absolute top-0 right-0 mt-4 mr-4">
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
@@ -209,10 +211,10 @@ export default function Blog() {
                         {post.title}
                       </Link>
                     </h3>
-                    <p className="text-gray-500 dark:text-gray-300 mb-4 line-clamp-3">
+                    <p className="text-gray-700 dark:text-gray-200 mb-4 line-clamp-3">
                       {post.excerpt}
                     </p>
-                    <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 space-x-4">
+                    <div className="flex items-center text-sm text-gray-600 dark:text-gray-300 space-x-4">
                       <div className="flex items-center">
                         <FaCalendarAlt className="mr-1 h-3 w-3" />
                         <span>{post.date}</span>

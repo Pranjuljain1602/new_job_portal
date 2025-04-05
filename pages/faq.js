@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Head from 'next/head';
-import { FaPlus, FaMinus, FaSearch } from 'react-icons/fa';
+import { FaPlus, FaMinus, FaSearch } from 'react-icons/fa/index.js';
 import { useTheme } from '../context/ThemeContext';
 
 export default function FAQ() {

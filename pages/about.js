@@ -47,9 +47,10 @@ export default function About() {
                 <Image
                   src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
                   alt="Team working together"
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-xl"
+                  width={2070}
+                  height={1380}
+                  className="rounded-xl object-cover"
+                  style={{ width: '100%', height: '100%' }}
                 />
               </div>
 
@@ -97,8 +98,10 @@ export default function About() {
                     <Image
                       src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
                       alt="Rajesh Sharma"
-                      layout="fill"
-                      objectFit="cover"
+                      width={160}
+                      height={160}
+                      className="object-cover"
+                      style={{ width: '100%', height: '100%' }}
                     />
                   </div>
                   <h3 className="text-lg font-medium text-gray-900 dark:text-white">Rajesh Sharma</h3>
@@ -109,8 +112,10 @@ export default function About() {
                     <Image
                       src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
                       alt="Priya Patel"
-                      layout="fill"
-                      objectFit="cover"
+                      width={160}
+                      height={160}
+                      className="object-cover"
+                      style={{ width: '100%', height: '100%' }}
                     />
                   </div>
                   <h3 className="text-lg font-medium text-gray-900 dark:text-white">Priya Patel</h3>
@@ -121,8 +126,10 @@ export default function About() {
                     <Image
                       src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
                       alt="Vikram Singh"
-                      layout="fill"
-                      objectFit="cover"
+                      width={160}
+                      height={160}
+                      className="object-cover"
+                      style={{ width: '100%', height: '100%' }}
                     />
                   </div>
                   <h3 className="text-lg font-medium text-gray-900 dark:text-white">Vikram Singh</h3>

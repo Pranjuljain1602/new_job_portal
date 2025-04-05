@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaCheckCircle } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaCheckCircle } from 'react-icons/fa/index.js';
 import { FaLinkedin } from 'react-icons/fa/index.js';
 import { FaTwitter } from 'react-icons/fa/index.js';
 import { FaFacebook } from 'react-icons/fa/index.js';

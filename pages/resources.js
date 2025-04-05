@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
-import { FaDownload, FaSearch, FaFilter } from 'react-icons/fa';
+import { FaDownload, FaSearch, FaFilter } from 'react-icons/fa/index.js';
 
 // Resource data with real content
 const resourceData = [
@@ -11,7 +11,7 @@ const resourceData = [
     category: 'Technical Interview',
     description: 'Master the most commonly asked LeetCode questions in technical interviews. Includes detailed solutions and time complexity analysis.',
     image: 'https://images.unsplash.com/photo-1555099962-4199c345e5dd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80',
-    downloadLink: '/resources/leetcode-top-75-questions.pdf',
+    downloadLink: 'https://drive.google.com/uc?export=download&id=1eDFURGUQ0bBMrz1VfPFtI-9kmiInbnGP',
     fileSize: '2.4 MB',
     type: 'PDF'
   },
@@ -21,7 +21,7 @@ const resourceData = [
     category: 'Resume',
     description: 'Professionally designed resume template optimized for Applicant Tracking Systems. Includes examples and tips for each section.',
     image: 'https://images.unsplash.com/photo-1586281380117-5a60ae2050cc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80',
-    downloadLink: '/resources/ats-friendly-resume-template.docx',
+    downloadLink: 'https://drive.google.com/uc?export=download&id=1yjfXU0Tw-lAQ-qfBHzMtkEwUn6iilOjE',
     fileSize: '1.8 MB',
     type: 'DOCX'
   },
@@ -30,8 +30,8 @@ const resourceData = [
     title: 'System Design Interview Cheatsheet',
     category: 'Technical Interview',
     description: 'Comprehensive guide to system design interviews. Covers key concepts, common questions, and step-by-step approach to solving system design problems.',
-    image: 'https://images.unsplash.com/photo-1517650862521-d580d5348145?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80',
-    downloadLink: '/resources/system-design-interview-cheatsheet.pdf',
+    image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80',
+    downloadLink: 'https://drive.google.com/uc?export=download&id=1QA9gHRnRsJygJfgYx1dW5wAhzhtV5CLr',
     fileSize: '3.1 MB',
     type: 'PDF'
   },
@@ -41,7 +41,7 @@ const resourceData = [
     category: 'Interview',
     description: 'Collection of 200+ commonly asked questions in government job interviews. Includes sample answers tailored for different positions.',
     image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80',
-    downloadLink: '/resources/government-job-interview-questions.pdf',
+    downloadLink: 'https://drive.google.com/uc?export=download&id=1YHmgkNzr5uN2GX36d5kX3HJ0RE9KOBlf',
     fileSize: '2.7 MB',
     type: 'PDF'
   },
@@ -51,7 +51,7 @@ const resourceData = [
     category: 'Technical Knowledge',
     description: 'Complete handbook covering essential data structures and algorithms. Includes implementations in Java, Python, and C++.',
     image: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1769&q=80',
-    downloadLink: '/resources/dsa-handbook.pdf',
+    downloadLink: 'https://drive.google.com/uc?export=download&id=1j3Z9xnYq0hbKc5z7RuOhQOzaAl0VZbTG',
     fileSize: '5.2 MB',
     type: 'PDF'
   },
@@ -61,7 +61,7 @@ const resourceData = [
     category: 'Resume',
     description: 'Set of 10 professional cover letter templates designed specifically for fresh graduates with little to no work experience.',
     image: 'https://images.unsplash.com/photo-1586282391129-76a6df230234?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80',
-    downloadLink: '/resources/cover-letter-templates.zip',
+    downloadLink: 'https://drive.google.com/uc?export=download&id=1wJHJ6j_YFCNdPe8PwKOdN9s0VdOaZOlc',
     fileSize: '1.5 MB',
     type: 'ZIP'
   },
@@ -71,7 +71,7 @@ const resourceData = [
     category: 'Soft Skills',
     description: 'Guide to delivering effective technical presentations. Includes tips for slide design, handling Q&A, and managing presentation anxiety.',
     image: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80',
-    downloadLink: '/resources/public-speaking-for-technical-presentations.pdf',
+    downloadLink: 'https://drive.google.com/uc?export=download&id=1KfFQpwETMlr0rGhN6jvyYVU48IXcvavY',
     fileSize: '2.3 MB',
     type: 'PDF'
   },
@@ -81,7 +81,7 @@ const resourceData = [
     category: 'Internship',
     description: 'Official guide to AICTE-approved internships. Includes eligibility criteria, application process, and tips for making the most of your internship.',
     image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80',
-    downloadLink: '/resources/aicte-internship-guide-2023.pdf',
+    downloadLink: 'https://drive.google.com/uc?export=download&id=1dhKv-AfnV04RjHGrDhKLJfhX_kbh6jPg',
     fileSize: '4.1 MB',
     type: 'PDF'
   }
@@ -146,9 +146,10 @@ export default function Resources() {
             <Image
               src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
               alt="Library of resources"
-              layout="fill"
-              objectFit="cover"
-              className="opacity-20"
+              width={1770}
+              height={1180}
+              className="opacity-20 object-cover"
+              style={{ width: '100%', height: '100%' }}
             />
           </div>
           <div className="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
@@ -208,8 +209,10 @@ export default function Resources() {
                     <Image
                       src={resource.image}
                       alt={resource.title}
-                      layout="fill"
-                      objectFit="cover"
+                      width={1770}
+                      height={1180}
+                      className="object-cover"
+                      style={{ width: '100%', height: '100%' }}
                     />
                   </div>
                   <div className="p-6">

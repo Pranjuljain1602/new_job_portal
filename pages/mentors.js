@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
+import Link from 'next/link';
 
 // Mentor data with realistic information
 const mentors = [
@@ -125,9 +126,10 @@ export default function Mentors() {
             <Image
               src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80"
               alt="People in a meeting"
-              layout="fill"
-              objectFit="cover"
-              className="opacity-20"
+              width={1974}
+              height={1316}
+              className="opacity-20 object-cover"
+              style={{ width: '100%', height: '100%' }}
             />
           </div>
           <div className="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
@@ -181,8 +183,10 @@ export default function Mentors() {
                       <Image
                         src={mentor.image}
                         alt={mentor.name}
-                        layout="fill"
-                        objectFit="cover"
+                        width={80}
+                        height={80}
+                        className="object-cover"
+                        style={{ width: '100%', height: '100%' }}
                       />
                     </div>
                     <div className="ml-5">
@@ -237,12 +241,12 @@ export default function Mentors() {
             <p className="mt-4 text-lg leading-6 text-indigo-200">
               Help the next generation of professionals succeed in their careers while building your personal brand and network.
             </p>
-            <a
+            <Link 
               href="/contact"
               className="mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50 dark:hover:bg-gray-100 sm:w-auto transition-colors duration-300"
             >
-              Apply to be a Mentor
-            </a>
+              Get in Touch
+            </Link>
           </div>
         </div>
       </div>
