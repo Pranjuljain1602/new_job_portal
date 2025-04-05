@@ -1,6 +1,7 @@
 import '../styles/globals.css';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { ThemeProvider } from '../context/ThemeContext';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -20,9 +21,13 @@ function MyApp({ Component, pageProps }) {
   }, [router]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Component {...pageProps} />
-    </div>
+    <ThemeProvider>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+        <main className="animate-fade-in">
+          <Component {...pageProps} />
+        </main>
+      </div>
+    </ThemeProvider>
   );
 }
 
