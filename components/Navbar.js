@@ -160,21 +160,12 @@ export default function Navbar({ user }) {
                       Settings
                     </Link>
                     
-                    <button
-                      type="button"
-                      className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                      role="menuitem"
-                      onClick={handleDeleteAccount}
-                    >
-                      Delete My Account
-                    </button>
-                    
                     <Link 
-                      href="/mentors" 
+                      href="/mentors/booked-sessions" 
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       role="menuitem"
                     >
-                      Your Mentors
+                      Booked Sessions
                     </Link>
                     
                     <button
@@ -304,19 +295,11 @@ export default function Navbar({ user }) {
                 Account Details
               </Link>
               
-              <button
-                type="button"
-                className="block w-full text-left pl-7 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-red-600 hover:bg-gray-50 hover:border-gray-300"
-                onClick={handleDeleteAccount}
-              >
-                Delete My Account
-              </button>
-              
               <Link 
-                href="/mentors/sessions" 
-                className={`${isActive('/mentors/sessions') ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
+                href="/mentors/booked-sessions" 
+                className={`${isActive('/mentors/booked-sessions') ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
               >
-                Your Mentors
+                Booked Sessions
               </Link>
             </>
           )}
@@ -369,19 +352,11 @@ export default function Navbar({ user }) {
                   Settings
                 </Link>
                 
-                <button
-                  type="button"
-                  className="block w-full text-left px-4 py-2 text-base font-medium text-red-600 hover:text-red-800 hover:bg-gray-100"
-                  onClick={handleDeleteAccount}
-                >
-                  Delete My Account
-                </button>
-                
                 <Link 
-                  href="/mentors" 
+                  href="/mentors/booked-sessions" 
                   className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
                 >
-                  Your Mentors
+                  Booked Sessions
                 </Link>
                 
                 <button
