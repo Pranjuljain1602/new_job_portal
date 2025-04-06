@@ -213,9 +213,6 @@ ${userProfile?.fullName || '[Your Name]'}`
     setSubmitting(true);
     
     try {
-      // In a real app, this would save to Firestore
-      // For demonstration, we'll simulate the process
-      
       // Create application object
       const applicationData = {
         id: Math.random().toString(36).substring(2, 15),
@@ -232,7 +229,16 @@ ${userProfile?.fullName || '[Your Name]'}`
         lastStatusUpdate: new Date().toISOString()
       };
       
-      // Simulate saving to database with a timeout
+      // Get existing applications from localStorage
+      const existingApplications = JSON.parse(localStorage.getItem('jobApplications') || '[]');
+      
+      // Add new application
+      const updatedApplications = [...existingApplications, applicationData];
+      
+      // Save to localStorage
+      localStorage.setItem('jobApplications', JSON.stringify(updatedApplications));
+      
+      // Simulate processing with a timeout
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Show success notification

@@ -59,61 +59,14 @@ export default function ApplicationsPage() {
 
   const fetchApplications = async (userId) => {
     try {
-      // For demonstration, we're using mock data
-      // In a real app, this would be fetched from Firestore
+      // Get applications from localStorage instead of using mock data
+      const applications = JSON.parse(localStorage.getItem('jobApplications') || '[]');
       
-      // Mock data for applications
-      const mockApplications = [
-        {
-          id: 'app1',
-          jobId: '1',
-          jobTitle: 'Software Engineer',
-          company: 'Ministry of Electronics & IT',
-          location: 'Delhi',
-          applicationDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-          status: 'Under Review',
-          coverLetter: 'Dear Hiring Manager, I am writing to express my interest...',
-          resume: 'https://example.com/resume.pdf',
-          lastStatusUpdate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
-        },
-        {
-          id: 'app2',
-          jobId: '5',
-          jobTitle: 'AI Research Engineer',
-          company: 'Defence Research and Development Organisation (DRDO)',
-          location: 'Hyderabad',
-          applicationDate: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
-          status: 'Shortlisted',
-          coverLetter: 'Dear Hiring Team, I am interested in the AI Research position...',
-          resume: 'https://example.com/resume.pdf',
-          lastStatusUpdate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
-        },
-        {
-          id: 'app3',
-          jobId: 'intern3',
-          jobTitle: 'Digital Marketing Intern',
-          company: 'Digital India Corporation',
-          location: 'Delhi',
-          applicationDate: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
-          status: 'Rejected',
-          coverLetter: 'Dear Recruitment Team, I would like to apply for the Digital Marketing Internship...',
-          resume: 'https://example.com/resume.pdf',
-          lastStatusUpdate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString()
-        }
-      ];
+      // Filter applications for this user
+      const userApplications = applications.filter(app => app.userId === userId);
       
-      // Simulate some users having no applications
-      // For demo purposes, randomly decide whether to show applications
-      const hasApplications = Math.random() > 0.3; // 70% chance of having applications
-      
-      if (hasApplications) {
-        setApplications(mockApplications);
-        setFilteredApplications(mockApplications);
-      } else {
-        setApplications([]);
-        setFilteredApplications([]);
-      }
-      
+      setApplications(userApplications);
+      setFilteredApplications(userApplications);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching applications:", error);
@@ -347,21 +300,32 @@ export default function ApplicationsPage() {
             </div>
           </>
         ) : (
-          <div className="bg-white shadow rounded-lg p-8 text-center">
-            <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          <div className="bg-white rounded-lg shadow-md p-8 text-center">
+            <svg 
+              className="mx-auto h-12 w-12 text-gray-400" 
+              xmlns="http://www.w3.org/2000/svg" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" 
+              />
             </svg>
-            <h3 className="mt-2 text-lg font-medium text-gray-900">You haven't applied for any jobs or internships yet</h3>
+            <h2 className="mt-2 text-lg font-medium text-gray-900">No applications yet</h2>
             <p className="mt-1 text-sm text-gray-500">
-              When you apply for positions, they will appear here so you can track your applications.
+              You have not applied for any jobs or internships yet.
             </p>
             <div className="mt-6">
-              <Link
-                href="/jobs"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              <button
+                onClick={() => router.push('/jobs')}
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Browse Jobs
-              </Link>
+              </button>
             </div>
           </div>
         )}

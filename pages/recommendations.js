@@ -69,12 +69,23 @@ export default function RecommendationsPage() {
       setSavedJobs(savedJobIds);
       
       // Get AI recommendations
-      const recommendedJobs = getAIRecommendations(userProfile);
+      const recommendedJobs = await getAIRecommendations(userProfile);
       
-      // Sort by match score (highest first)
-      recommendedJobs.sort((a, b) => b.matchScore - a.matchScore);
+      // Check if recommendedJobs is an array before sorting
+      if (Array.isArray(recommendedJobs)) {
+        // Sort by match score (highest first)
+        recommendedJobs.sort((a, b) => b.matchScore - a.matchScore);
+        setRecommendations(recommendedJobs);
+      } else {
+        console.error("Recommended jobs is not an array:", recommendedJobs);
+        setRecommendations([]);
+        setNotification({
+          show: true,
+          type: 'error',
+          message: 'Error loading recommendations. Please try again.'
+        });
+      }
       
-      setRecommendations(recommendedJobs);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching recommendations:", error);

@@ -40,8 +40,6 @@ export default function JobCard({ job, saved, onSaveToggle, showMatchScore = fal
     e.preventDefault();
     e.stopPropagation();
     
-    setSaved(!saved);
-    
     if (onSaveToggle) {
       onSaveToggle(job.id, !saved);
     }
@@ -141,7 +139,14 @@ export default function JobCard({ job, saved, onSaveToggle, showMatchScore = fal
               )}
             </div>
             
-            <div>
+            <div className="flex gap-2">
+              <Link 
+                href={`/jobs/${job.id}`}
+                onClick={(e) => e.stopPropagation()}
+                className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                View More
+              </Link>
               <Link 
                 href={`/jobs/apply?jobId=${job.id}`}
                 onClick={(e) => e.stopPropagation()}

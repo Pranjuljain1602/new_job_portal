@@ -135,7 +135,7 @@ export default function SavedJobs() {
             </svg>
             <h2 className="mt-2 text-lg font-medium text-gray-900">No saved jobs yet</h2>
             <p className="mt-1 text-sm text-gray-500">
-              Save jobs that interest you to view them later and track your applications.
+              You don't have any saved jobs or internships yet.
             </p>
             <div className="mt-6">
               <button
