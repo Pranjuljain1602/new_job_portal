@@ -108,18 +108,8 @@ export default function JobDetails() {
   };
 
   const handleApply = () => {
-    // In a real app, this would create an application in Firestore
-    // For now, just show a success notification
-    setNotification({
-      show: true,
-      type: 'success',
-      message: 'You have successfully applied for this job.'
-    });
-    
-    // Simulate a delay before redirecting to applications page
-    setTimeout(() => {
-      router.push('/jobs/applications');
-    }, 2000);
+    // Redirect to apply page with job ID
+    router.push(`/jobs/apply?jobId=${id}`);
   };
 
   const formatSalary = (salary) => {

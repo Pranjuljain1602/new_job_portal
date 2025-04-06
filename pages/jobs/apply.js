@@ -6,6 +6,8 @@ import { doc, getDoc, setDoc, collection, addDoc } from 'firebase/firestore';
 import { auth, db } from '../../utils/firebase';
 import Navbar from '../../components/Navbar';
 import Notification from '../../components/Notification';
+import { mockJobs } from '../../utils/mockData';
+import { calculateSkillMatch } from '../../utils/matchingAlgorithms';
 
 export default function ApplyForJob() {
   const router = useRouter();
@@ -70,83 +72,7 @@ export default function ApplyForJob() {
     
     const fetchJobData = async () => {
       try {
-        // For demonstration, we're using mock data
-        // In a real app, this would fetch from Firestore
-        const mockJobs = [
-          {
-            id: '1',
-            title: 'Software Engineer',
-            company: 'Ministry of Electronics & IT',
-            location: 'Delhi',
-            jobType: 'Full-time',
-            isAICTE: true,
-            isGovernment: true,
-            experienceLevel: 'Entry Level',
-            salary: {
-              value: 600000,
-              period: 'per year'
-            },
-            postedDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-            deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-            description: 'We are looking for a Software Engineer to join our team and help build digital solutions for government services.',
-            requirements: [
-              'Bachelor\'s degree in Computer Science or related field',
-              'Knowledge of JavaScript, React, and Node.js',
-              'Good problem-solving skills',
-              'Ability to work in a team environment'
-            ],
-            requiredSkills: ['JavaScript', 'React', 'Node.js', 'HTML', 'CSS']
-          },
-          {
-            id: '2',
-            title: 'Data Scientist',
-            company: 'Indian Space Research Organisation (ISRO)',
-            location: 'Bangalore',
-            jobType: 'Full-time',
-            isAICTE: true,
-            isGovernment: true,
-            experienceLevel: 'Mid Level',
-            salary: {
-              value: 900000,
-              period: 'per year'
-            },
-            postedDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-            deadline: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000).toISOString(),
-            description: 'Join ISRO as a Data Scientist to analyze satellite data and contribute to India\'s space research programs.',
-            requirements: [
-              'Master\'s or PhD in Data Science, Statistics, or related field',
-              'Experience with Python, R, and machine learning frameworks',
-              'Knowledge of data visualization tools',
-              'Strong analytical and problem-solving skills'
-            ],
-            requiredSkills: ['Python', 'Machine Learning', 'Data Analysis', 'Statistics', 'TensorFlow']
-          },
-          {
-            id: '3',
-            title: 'Web Development Intern',
-            company: 'National Informatics Centre',
-            location: 'Remote',
-            jobType: 'Internship',
-            isAICTE: true,
-            isGovernment: true,
-            experienceLevel: 'Entry Level',
-            salary: {
-              value: 15000,
-              period: 'per month'
-            },
-            postedDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-            deadline: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString(),
-            description: 'Exciting opportunity to work on government web applications and gain valuable experience in web development.',
-            requirements: [
-              'Currently pursuing a degree in Computer Science or related field',
-              'Knowledge of HTML, CSS, and JavaScript',
-              'Familiarity with React or Angular is a plus',
-              'Good communication skills'
-            ],
-            requiredSkills: ['HTML', 'CSS', 'JavaScript', 'React']
-          }
-        ];
-        
+        // Find the job in mockJobs data
         const job = mockJobs.find(j => j.id === jobId);
         
         if (job) {
@@ -193,6 +119,15 @@ ${userProfile?.fullName || '[Your Name]'}`
       ...prev,
       [name]: value
     }));
+  };
+
+  // Calculate match score
+  const calculateMatchScore = () => {
+    if (!jobData || !userProfile || !userProfile.skills) return 0;
+    
+    // Calculate skill match
+    let score = calculateSkillMatch(userProfile.skills, jobData.skills || []);
+    return Math.round(score * 100);
   };
 
   const handleSubmit = async (e) => {
@@ -245,7 +180,7 @@ ${userProfile?.fullName || '[Your Name]'}`
       setNotification({
         show: true,
         type: 'success',
-        message: 'Your application has been submitted successfully!'
+        message: 'You have successfully applied for this job!'
       });
       
       // Redirect to applications page after a delay
@@ -317,6 +252,12 @@ ${userProfile?.fullName || '[Your Name]'}`
           <div className="px-4 py-5 sm:px-6">
             <h2 className="text-2xl font-bold text-gray-900">Apply for {jobData.title}</h2>
             <p className="mt-1 max-w-2xl text-sm text-gray-500">{jobData.company} • {jobData.location}</p>
+            
+            {userProfile && userProfile.skills && jobData.skills && (
+              <div className="mt-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                Profile Match: {calculateMatchScore()}%
+              </div>
+            )}
           </div>
         </div>
         

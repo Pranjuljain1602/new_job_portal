@@ -5,12 +5,11 @@ export default function FilterSidebar({ filters, onFilterChange, forInternships 
     location: filters.location || [],
     jobType: filters.jobType || [],
     experience: filters.experience || [],
+    workMode: filters.workMode || [],
     salary: {
       min: filters.salary?.min || 0,
       max: filters.salary?.max || 0
-    },
-    isAICTE: filters.isAICTE || false,
-    isGovernment: filters.isGovernment || false
+    }
   });
   
   useEffect(() => {
@@ -19,12 +18,11 @@ export default function FilterSidebar({ filters, onFilterChange, forInternships 
       location: filters.location || [],
       jobType: filters.jobType || [],
       experience: filters.experience || [],
+      workMode: filters.workMode || [],
       salary: {
         min: filters.salary?.min || 0,
         max: filters.salary?.max || 0
-      },
-      isAICTE: filters.isAICTE || false,
-      isGovernment: filters.isGovernment || false
+      }
     });
   }, [filters]);
 
@@ -89,12 +87,15 @@ export default function FilterSidebar({ filters, onFilterChange, forInternships 
     onFilterChange(updatedFilters);
   };
 
-  const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
+  const handleWorkModeChange = (e) => {
+    const { value, checked } = e.target;
+    const updatedWorkModes = checked
+      ? [...localFilters.workMode, value]
+      : localFilters.workMode.filter(mode => mode !== value);
     
     const updatedFilters = {
       ...localFilters,
-      [name]: checked
+      workMode: updatedWorkModes
     };
     
     setLocalFilters(updatedFilters);
@@ -107,12 +108,11 @@ export default function FilterSidebar({ filters, onFilterChange, forInternships 
       location: [],
       jobType: forInternships ? ['Internship'] : [],
       experience: [],
+      workMode: [],
       salary: {
         min: 0,
         max: 0
-      },
-      isAICTE: false,
-      isGovernment: false
+      }
     };
     
     setLocalFilters(defaultFilters);
@@ -205,7 +205,9 @@ export default function FilterSidebar({ filters, onFilterChange, forInternships 
       
       {/* Salary filter */}
       <div className="mb-6">
-        <h3 className="text-sm font-medium text-gray-900 mb-2">Salary (₹ per year)</h3>
+        <h3 className="text-sm font-medium text-gray-900 mb-2">
+          Salary {forInternships ? '(₹ per month)' : '(₹ per year)'}
+        </h3>
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label htmlFor="min-salary" className="block text-sm text-gray-600 mb-1">Min</label>
@@ -236,37 +238,26 @@ export default function FilterSidebar({ filters, onFilterChange, forInternships 
         </div>
       </div>
       
-      {/* AICTE Approved filter */}
+      {/* Work Mode filter */}
       <div className="mb-6">
-        <div className="flex items-center">
-          <input
-            id="aicte-approved"
-            name="isAICTE"
-            type="checkbox"
-            className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-            checked={localFilters.isAICTE}
-            onChange={handleCheckboxChange}
-          />
-          <label htmlFor="aicte-approved" className="ml-3 text-sm text-gray-600">
-            AICTE Approved Only
-          </label>
-        </div>
-      </div>
-      
-      {/* Government Jobs filter */}
-      <div className="mb-2">
-        <div className="flex items-center">
-          <input
-            id="government-jobs"
-            name="isGovernment"
-            type="checkbox"
-            className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-            checked={localFilters.isGovernment}
-            onChange={handleCheckboxChange}
-          />
-          <label htmlFor="government-jobs" className="ml-3 text-sm text-gray-600">
-            Government Jobs Only
-          </label>
+        <h3 className="text-sm font-medium text-gray-900 mb-2">Work Mode</h3>
+        <div className="space-y-2">
+          {['Remote', 'On-site', 'Hybrid'].map((mode) => (
+            <div key={mode} className="flex items-center">
+              <input
+                id={`work-mode-${mode}`}
+                name="workMode"
+                value={mode}
+                type="checkbox"
+                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                checked={localFilters.workMode.includes(mode)}
+                onChange={handleWorkModeChange}
+              />
+              <label htmlFor={`work-mode-${mode}`} className="ml-3 text-sm text-gray-600">
+                {mode}
+              </label>
+            </div>
+          ))}
         </div>
       </div>
     </div>

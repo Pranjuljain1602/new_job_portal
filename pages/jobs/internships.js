@@ -18,10 +18,10 @@ export default function InternshipsPage() {
   const [filteredInternships, setFilteredInternships] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({
-    jobType: [],
+    jobType: ['Internship'],
     experienceLevel: [],
-    isAICTE: false,
-    isGovernment: false,
+    location: [],
+    workMode: [],
     salary: { min: '', max: '' }
   });
   const [notification, setNotification] = useState({
@@ -123,14 +123,18 @@ export default function InternshipsPage() {
       filtered = filtered.filter(internship => activeFilters.experienceLevel.includes(internship.experienceLevel));
     }
     
-    // Apply AICTE filter
-    if (activeFilters.isAICTE) {
-      filtered = filtered.filter(internship => internship.isAICTE);
+    // Apply location filter
+    if (activeFilters.location && activeFilters.location.length > 0) {
+      filtered = filtered.filter(internship => activeFilters.location.includes(internship.location));
     }
     
-    // Apply government filter
-    if (activeFilters.isGovernment) {
-      filtered = filtered.filter(internship => internship.isGovernment);
+    // Apply work mode filter
+    if (activeFilters.workMode && activeFilters.workMode.length > 0) {
+      filtered = filtered.filter(internship => {
+        // Default to On-site if not specified
+        const internshipWorkMode = internship.workMode || 'On-site';
+        return activeFilters.workMode.includes(internshipWorkMode);
+      });
     }
     
     // Apply salary filter
@@ -256,10 +260,10 @@ export default function InternshipsPage() {
                     onClick={() => {
                       setSearchTerm('');
                       setFilters({
-                        jobType: [],
+                        jobType: ['Internship'],
                         experienceLevel: [],
-                        isAICTE: false,
-                        isGovernment: false,
+                        location: [],
+                        workMode: [],
                         salary: { min: '', max: '' }
                       });
                       setFilteredInternships(internships);

@@ -20,8 +20,8 @@ export default function JobsPage() {
   const [filters, setFilters] = useState({
     jobType: [],
     experienceLevel: [],
-    isAICTE: false,
-    isGovernment: false,
+    location: [],
+    workMode: [],
     salary: { min: '', max: '' }
   });
   const [notification, setNotification] = useState({
@@ -123,14 +123,18 @@ export default function JobsPage() {
       filtered = filtered.filter(job => activeFilters.experienceLevel.includes(job.experienceLevel));
     }
     
-    // Apply AICTE filter
-    if (activeFilters.isAICTE) {
-      filtered = filtered.filter(job => job.isAICTE);
+    // Apply location filter
+    if (activeFilters.location && activeFilters.location.length > 0) {
+      filtered = filtered.filter(job => activeFilters.location.includes(job.location));
     }
     
-    // Apply government filter
-    if (activeFilters.isGovernment) {
-      filtered = filtered.filter(job => job.isGovernment);
+    // Apply work mode filter
+    if (activeFilters.workMode && activeFilters.workMode.length > 0) {
+      filtered = filtered.filter(job => {
+        // Default to On-site if not specified
+        const jobWorkMode = job.workMode || 'On-site';
+        return activeFilters.workMode.includes(jobWorkMode);
+      });
     }
     
     // Apply salary filter
@@ -258,8 +262,8 @@ export default function JobsPage() {
                       setFilters({
                         jobType: [],
                         experienceLevel: [],
-                        isAICTE: false,
-                        isGovernment: false,
+                        location: [],
+                        workMode: [],
                         salary: { min: '', max: '' }
                       });
                       setFilteredJobs(jobs);

@@ -156,17 +156,55 @@ export default function RecommendationsPage() {
         </header>
         
         {recommendations.length > 0 ? (
-          <div className="grid grid-cols-1 gap-6">
-            {recommendations.map((job) => (
-              <JobCard
-                key={job.id}
-                job={job}
-                saved={savedJobs.includes(job.id)}
-                onSaveToggle={handleSaveToggle}
-                showMatchScore={true}
-              />
-            ))}
-          </div>
+          <>
+            {/* Skills Suggestions */}
+            {userProfile && userProfile.skills && (
+              <div className="bg-blue-50 rounded-lg p-4 mb-6 border border-blue-100">
+                <h2 className="text-lg font-medium text-blue-800 mb-2">Skill Suggestions</h2>
+                <p className="text-sm text-blue-700 mb-3">
+                  Based on your current skills, consider learning these additional skills to improve your job prospects:
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {!userProfile.skills.some(skill => skill.toLowerCase().includes('react')) && (
+                    <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+                      React.js for Frontend roles
+                    </span>
+                  )}
+                  {!userProfile.skills.some(skill => skill.toLowerCase().includes('node')) && (
+                    <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+                      Node.js for Backend roles
+                    </span>
+                  )}
+                  {!userProfile.skills.some(skill => skill.toLowerCase().includes('python')) && (
+                    <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+                      Python for Data Science roles
+                    </span>
+                  )}
+                  {!userProfile.skills.some(skill => skill.toLowerCase().includes('aws') || skill.toLowerCase().includes('cloud')) && (
+                    <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+                      AWS/Cloud for DevOps roles
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+            
+            <div className="grid grid-cols-1 gap-6">
+              {recommendations.map((job) => (
+                <div key={job.id} className="relative">
+                  {/* Profile Match Badge */}
+                  <div className="absolute right-3 top-3 z-10 bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded-full">
+                    Profile Match: {Math.round(job.matchScore * 100)}%
+                  </div>
+                  <JobCard
+                    job={job}
+                    saved={savedJobs.includes(job.id)}
+                    onSaveToggle={handleSaveToggle}
+                  />
+                </div>
+              ))}
+            </div>
+          </>
         ) : (
           <div className="bg-white rounded-lg shadow-md p-8 text-center">
             <svg 
