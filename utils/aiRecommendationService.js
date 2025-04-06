@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { calculateSkillMatch, calculateInterestMatch, calculateEducationMatch, calculateExperienceMatch } from './matchingAlgorithms';
+import { mockJobs } from './mockData';
 
 // This would connect to your actual AI model API in production
 const AI_API_URL = process.env.NEXT_PUBLIC_AI_API_URL || 'https://api.aicte-jobs-portal.com/ai';
@@ -11,14 +12,13 @@ const AI_API_URL = process.env.NEXT_PUBLIC_AI_API_URL || 'https://api.aicte-jobs
  */
 export const getAIRecommendations = async (userProfile) => {
   try {
-    // In production, this would call your actual AI model API
-    // const response = await axios.post(`${AI_API_URL}/recommend`, userProfile);
-    // return response.data;
+    // Simulate API call with a delay
+    await new Promise(resolve => setTimeout(resolve, 800));
     
-    // For development, we'll use our local AI simulation
+    // Return recommendations
     return simulateAIRecommendations(userProfile);
   } catch (error) {
-    console.error("Error getting AI recommendations:", error);
+    console.error('Error in AI recommendation service:', error);
     throw error;
   }
 };
@@ -28,51 +28,62 @@ export const getAIRecommendations = async (userProfile) => {
  * This would be replaced by a real ML model in production
  */
 const simulateAIRecommendations = async (userProfile) => {
-  // Fetch all available jobs
-  const allJobs = await fetchAvailableJobs();
+  // If userProfile is null or doesn't have skills, return all jobs with default match scores
+  if (!userProfile || !userProfile.skills || !Array.isArray(userProfile.skills) || userProfile.skills.length === 0) {
+    return mockJobs.map(job => ({
+      ...job,
+      matchScore: 0.5, // Default medium match
+      matchedSkills: [],
+      missingSkills: job.skills || [],
+      recommendationReason: "This job aligns with common career interests."
+    }));
+  }
   
-  // Apply our matching algorithms to each job
-  const scoredJobs = allJobs.map(job => {
-    // Calculate different aspects of the match
-    const skillMatchScore = calculateSkillMatch(userProfile.skills, job.requiredSkills);
-    const interestMatchScore = calculateInterestMatch(userProfile.interests, job);
-    const educationMatchScore = calculateEducationMatch(userProfile.education, job.requirements);
-    const experienceMatchScore = calculateExperienceMatch(userProfile.experience, job.experienceLevel);
+  // Normalize user skills to lowercase for matching
+  const userSkills = userProfile.skills.map(skill => skill.toLowerCase());
+  
+  // Score each job based on skill matching
+  const scoredJobs = mockJobs.map(job => {
+    // If job has no skills, provide a default medium match
+    if (!job.skills || !Array.isArray(job.skills) || job.skills.length === 0) {
+      return {
+        ...job,
+        matchScore: 0.5,
+        matchedSkills: [],
+        missingSkills: [],
+        recommendationReason: "This job may be of interest based on your profile."
+      };
+    }
     
-    // Calculate overall match score with weighted components
-    // These weights would be optimized by the AI model in production
-    const matchScore = (
-      skillMatchScore * 0.5 + 
-      interestMatchScore * 0.3 + 
-      educationMatchScore * 0.1 + 
-      experienceMatchScore * 0.1
-    );
+    // Normalize job skills to lowercase
+    const jobSkills = job.skills.map(skill => skill.toLowerCase());
     
-    // Identify matched and missing skills
-    const matchedSkills = userProfile.skills.filter(skill => 
-      job.requiredSkills.some(req => req.toLowerCase().includes(skill.toLowerCase()))
-    );
+    // Find matching skills
+    const matchedSkills = jobSkills.filter(skill => userSkills.includes(skill));
+    const missingSkills = jobSkills.filter(skill => !userSkills.includes(skill));
     
-    const missingSkills = job.requiredSkills.filter(skill => 
-      !userProfile.skills.some(userSkill => skill.toLowerCase().includes(userSkill.toLowerCase()))
-    );
+    // Calculate match score (simple ratio of matched skills to total required skills)
+    const matchScore = jobSkills.length > 0 ? matchedSkills.length / jobSkills.length : 0;
     
-    // Return job with match data
+    // Generate recommendation reason
+    let recommendationReason = "";
+    if (matchScore >= 0.8) {
+      recommendationReason = "This job is an excellent match for your skills and experience.";
+    } else if (matchScore >= 0.5) {
+      recommendationReason = "This job is a good match for your skills, with some opportunity to develop new abilities.";
+    } else if (matchScore > 0) {
+      recommendationReason = "This job offers a chance to leverage some of your existing skills while learning new ones.";
+    } else {
+      recommendationReason = "This job could provide an opportunity to expand your skill set in a new direction.";
+    }
+    
+    // Return enhanced job with match information
     return {
       ...job,
       matchScore,
-      matchPercentage: Math.round(matchScore * 100),
-      matchedSkills,
-      missingSkills,
-      // Add personalized recommendation reason based on highest match component
-      recommendationReason: generateRecommendationReason(
-        skillMatchScore, 
-        interestMatchScore, 
-        educationMatchScore, 
-        experienceMatchScore,
-        userProfile,
-        job
-      )
+      matchedSkills: matchedSkills.map(s => s.charAt(0).toUpperCase() + s.slice(1)), // Capitalize first letter
+      missingSkills: missingSkills.map(s => s.charAt(0).toUpperCase() + s.slice(1)), // Capitalize first letter
+      recommendationReason
     };
   });
   
@@ -107,7 +118,7 @@ const generateRecommendationReason = (
   switch (highestMatch.type) {
     case 'skill':
       const topSkills = userProfile.skills
-        .filter(skill => job.requiredSkills.some(req => req.toLowerCase().includes(skill.toLowerCase())))
+        .filter(skill => job.skills.some(req => req.toLowerCase().includes(skill.toLowerCase())))
         .slice(0, 2);
       return `Your ${topSkills.join(' and ')} skills are a great match for this position.`;
       

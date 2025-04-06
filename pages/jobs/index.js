@@ -3,34 +3,40 @@ import { useRouter } from 'next/router';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../utils/firebase';
-import { getAIRecommendations } from '../../utils/aiRecommendationService';
-import JobCard from '../../components/JobCard';
+import { getJobs } from '../../utils/mockData';
 import Navbar from '../../components/Navbar';
+import JobCard from '../../components/JobCard';
 import FilterSidebar from '../../components/FilterSidebar';
+import Notification from '../../components/Notification';
 
-export default function Jobs() {
+export default function JobsPage() {
   const router = useRouter();
+  
   const [user, setUser] = useState(null);
-  const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [jobs, setJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({
     jobType: [],
-    location: [],
-    salary: { min: '', max: '' },
-    experience: []
+    experienceLevel: [],
+    isAICTE: false,
+    isGovernment: false,
+    salary: { min: '', max: '' }
   });
-  const [sortBy, setSortBy] = useState('relevance');
-  const [showFilters, setShowFilters] = useState(false);
+  const [notification, setNotification] = useState({
+    show: false,
+    type: '',
+    message: ''
+  });
+  const [savedJobs, setSavedJobs] = useState([]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
         
-        // Fetch user profile
+        // Fetch user profile to check if profile is completed
         try {
           const docRef = doc(db, 'users', currentUser.uid);
           const docSnap = await getDoc(docRef);
@@ -38,13 +44,10 @@ export default function Jobs() {
           if (docSnap.exists()) {
             const userData = docSnap.data();
             
-            // If profile is not completed, redirect to profile completion
             if (!userData.profileCompleted) {
               router.push('/profile/complete');
               return;
             }
-            
-            setUserProfile(userData);
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -54,98 +57,126 @@ export default function Jobs() {
         router.push('/auth/login');
         return;
       }
+      
+      await fetchJobs();
+      setLoading(false);
     });
     
     return () => unsubscribe();
   }, [router]);
 
-  // Fetch jobs when user profile is loaded
-  useEffect(() => {
-    if (userProfile) {
-      const getJobs = async () => {
-        try {
-          // Use our AI recommendation service instead of the simple fetchJobs
-          const jobsData = await getAIRecommendations(userProfile);
-          setJobs(jobsData);
-          setFilteredJobs(jobsData);
-          setLoading(false);
-        } catch (error) {
-          console.error("Error fetching AI job recommendations:", error);
-          setLoading(false);
-        }
-      };
+  const fetchJobs = async () => {
+    try {
+      // Get jobs (not internships) from mock data
+      const jobsList = getJobs();
+      setJobs(jobsList);
+      setFilteredJobs(jobsList);
       
-      getJobs();
+      // Get saved jobs from localStorage
+      const savedJobIds = JSON.parse(localStorage.getItem('savedJobs') || '[]');
+      setSavedJobs(savedJobIds);
+    } catch (error) {
+      console.error("Error fetching jobs:", error);
+      setNotification({
+        show: true,
+        type: 'error',
+        message: 'Error loading jobs. Please try again.'
+      });
     }
-  }, [userProfile]);
+  };
 
-  // Apply filters and search
-  useEffect(() => {
-    if (!jobs.length) return;
-    
-    let result = [...jobs];
+  // Handle search
+  const handleSearch = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+    filterJobs(term, filters);
+  };
+
+  // Handle filter changes
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
+    filterJobs(searchTerm, newFilters);
+  };
+
+  // Filter jobs based on search term and filters
+  const filterJobs = (term, activeFilters) => {
+    let filtered = [...jobs];
     
     // Apply search term
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase();
-      result = result.filter(job => 
-        job.title.toLowerCase().includes(term) || 
-        job.company.toLowerCase().includes(term) || 
-        job.description.toLowerCase().includes(term)
+    if (term) {
+      const lowercaseTerm = term.toLowerCase();
+      filtered = filtered.filter(job => 
+        job.title.toLowerCase().includes(lowercaseTerm) ||
+        job.company.toLowerCase().includes(lowercaseTerm) ||
+        job.location.toLowerCase().includes(lowercaseTerm) ||
+        (job.skills && job.skills.some(skill => skill.toLowerCase().includes(lowercaseTerm)))
       );
     }
     
     // Apply job type filter
-    if (filters.jobType.length) {
-      result = result.filter(job => filters.jobType.includes(job.jobType));
+    if (activeFilters.jobType && activeFilters.jobType.length > 0) {
+      filtered = filtered.filter(job => activeFilters.jobType.includes(job.jobType));
     }
     
-    // Apply location filter
-    if (filters.location.length) {
-      result = result.filter(job => filters.location.includes(job.location));
+    // Apply experience level filter
+    if (activeFilters.experienceLevel && activeFilters.experienceLevel.length > 0) {
+      filtered = filtered.filter(job => activeFilters.experienceLevel.includes(job.experienceLevel));
+    }
+    
+    // Apply AICTE filter
+    if (activeFilters.isAICTE) {
+      filtered = filtered.filter(job => job.isAICTE);
+    }
+    
+    // Apply government filter
+    if (activeFilters.isGovernment) {
+      filtered = filtered.filter(job => job.isGovernment);
     }
     
     // Apply salary filter
-    if (filters.salary.min || filters.salary.max) {
-      result = result.filter(job => {
-        const jobSalary = job.salary?.value || 0;
-        const min = filters.salary.min ? parseInt(filters.salary.min) : 0;
-        const max = filters.salary.max ? parseInt(filters.salary.max) : Infinity;
-        return jobSalary >= min && jobSalary <= max;
+    if (activeFilters.salary.min) {
+      filtered = filtered.filter(job => 
+        job.salary && job.salary.value >= parseInt(activeFilters.salary.min)
+      );
+    }
+    
+    if (activeFilters.salary.max) {
+      filtered = filtered.filter(job => 
+        job.salary && job.salary.value <= parseInt(activeFilters.salary.max)
+      );
+    }
+    
+    setFilteredJobs(filtered);
+  };
+
+  const handleSaveToggle = (jobId) => {
+    // Get current saved jobs from localStorage
+    const savedJobIds = JSON.parse(localStorage.getItem('savedJobs') || '[]');
+    let updatedSavedJobIds;
+    
+    if (savedJobIds.includes(jobId)) {
+      // Remove job from saved jobs
+      updatedSavedJobIds = savedJobIds.filter(id => id !== jobId);
+      setNotification({
+        show: true,
+        type: 'success',
+        message: 'Job removed from saved jobs'
+      });
+    } else {
+      // Add job to saved jobs
+      updatedSavedJobIds = [...savedJobIds, jobId];
+      setNotification({
+        show: true,
+        type: 'success',
+        message: 'Job saved successfully'
       });
     }
     
-    // Apply experience filter
-    if (filters.experience.length) {
-      result = result.filter(job => filters.experience.includes(job.experienceLevel));
-    }
+    // Update localStorage
+    localStorage.setItem('savedJobs', JSON.stringify(updatedSavedJobIds));
     
-    // Apply sorting
-    if (sortBy === 'relevance') {
-      // Already sorted by relevance from the API
-    } else if (sortBy === 'date') {
-      result.sort((a, b) => new Date(b.postedDate) - new Date(a.postedDate));
-    } else if (sortBy === 'salary') {
-      result.sort((a, b) => (b.salary?.value || 0) - (a.salary?.value || 0));
-    }
-    
-    setFilteredJobs(result);
-  }, [jobs, searchTerm, filters, sortBy]);
-
-  const handleFilterChange = (newFilters) => {
-    setFilters(newFilters);
-  };
-
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const handleSortChange = (e) => {
-    setSortBy(e.target.value);
-  };
-
-  const toggleFilters = () => {
-    setShowFilters(!showFilters);
+    // Update state
+    setSavedJobs(updatedSavedJobIds);
   };
 
   if (loading) {
@@ -160,91 +191,89 @@ export default function Jobs() {
     <div className="min-h-screen bg-gray-50">
       <Navbar user={user} />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">AICTE-Approved Jobs & Internships</h1>
-          
-          <button
-            type="button"
-            onClick={toggleFilters}
-            className="md:hidden inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            {showFilters ? 'Hide Filters' : 'Show Filters'}
-          </button>
-        </div>
+      <Notification
+        type={notification.type}
+        message={notification.message}
+        show={notification.show}
+        onClose={() => setNotification({ ...notification, show: false })}
+      />
+      
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">AICTE-Approved Jobs</h1>
+          <p className="mt-2 text-sm text-gray-500">
+            Browse through our collection of AICTE-approved job opportunities.
+          </p>
+        </header>
         
         <div className="flex flex-col md:flex-row gap-6">
-          {/* Filters sidebar - visible on desktop or when toggled on mobile */}
-          <div className={`${showFilters ? 'block' : 'hidden'} md:block md:w-64 flex-shrink-0`}>
-            <FilterSidebar filters={filters} onChange={handleFilterChange} />
+          <div className="md:w-1/4">
+            <FilterSidebar filters={filters} onFilterChange={handleFilterChange} />
           </div>
           
-          {/* Main content */}
-          <div className="flex-1">
-            {/* Search and sort controls */}
-            <div className="bg-white p-4 rounded-lg shadow mb-6">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="flex-1">
-                  <label htmlFor="search" className="sr-only">Search jobs</label>
-                  <div className="relative rounded-md shadow-sm">
-                    <input
-                      type="text"
-                      name="search"
-                      id="search"
-                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-10 sm:text-sm border-gray-300 rounded-md"
-                      placeholder="Search jobs by title, company, or keywords"
-                      value={searchTerm}
-                      onChange={handleSearchChange}
-                    />
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                      <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                  </div>
+          <div className="md:w-3/4">
+            <div className="mb-6">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+                  </svg>
                 </div>
-                
-                <div>
-                  <label htmlFor="sort" className="sr-only">Sort by</label>
-                  <select
-                    id="sort"
-                    name="sort"
-                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                    value={sortBy}
-                    onChange={handleSortChange}
-                  >
-                    <option value="relevance">Sort by: Relevance</option>
-                    <option value="date">Sort by: Date (newest)</option>
-                    <option value="salary">Sort by: Salary (highest)</option>
-                  </select>
-                </div>
+                <input
+                  type="text"
+                  name="search"
+                  id="search"
+                  value={searchTerm}
+                  onChange={handleSearch}
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Search jobs by title, company, location, or skills"
+                />
               </div>
             </div>
             
-            {/* Results count */}
-            <div className="mb-4">
-              <p className="text-sm text-gray-700">
-                Showing <span className="font-medium">{filteredJobs.length}</span> results
-                {searchTerm && <span> for "<span className="font-medium">{searchTerm}</span>"</span>}
-              </p>
-            </div>
-            
-            {/* Job listings */}
-            <div className="space-y-4">
-              {filteredJobs.length > 0 ? (
-                filteredJobs.map(job => (
-                  <JobCard key={job.id} job={job} />
-                ))
-              ) : (
-                <div className="bg-white p-6 rounded-lg shadow text-center">
-                  <p className="text-gray-500">No jobs found matching your criteria.</p>
-                  <p className="mt-2 text-sm text-gray-500">Try adjusting your filters or search terms.</p>
+            {filteredJobs.length > 0 ? (
+              <div className="grid grid-cols-1 gap-6">
+                {filteredJobs.map((job) => (
+                  <JobCard
+                    key={job.id}
+                    job={job}
+                    saved={savedJobs.includes(job.id)}
+                    onSaveToggle={handleSaveToggle}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="bg-white shadow rounded-lg p-8 text-center">
+                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h3 className="mt-2 text-lg font-medium text-gray-900">No jobs found</h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  Try adjusting your search or filter criteria to find more results.
+                </p>
+                <div className="mt-6">
+                  <button
+                    onClick={() => {
+                      setSearchTerm('');
+                      setFilters({
+                        jobType: [],
+                        experienceLevel: [],
+                        isAICTE: false,
+                        isGovernment: false,
+                        salary: { min: '', max: '' }
+                      });
+                      setFilteredJobs(jobs);
+                    }}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    Clear Filters
+                  </button>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 } 

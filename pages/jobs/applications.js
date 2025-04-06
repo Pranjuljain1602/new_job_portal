@@ -4,16 +4,22 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../utils/firebase';
 import Navbar from '../../components/Navbar';
+import Notification from '../../components/Notification';
+import Link from 'next/link';
 
-export default function Applications() {
+export default function ApplicationsPage() {
   const router = useRouter();
   const [user, setUser] = useState(null);
-  const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [applications, setApplications] = useState([]);
   const [filteredApplications, setFilteredApplications] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [notification, setNotification] = useState({
+    show: false,
+    type: '',
+    message: ''
+  });
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -28,16 +34,18 @@ export default function Applications() {
           if (docSnap.exists()) {
             const userData = docSnap.data();
             
-            // If profile is not completed, redirect to profile completion
+            // Redirect if profile not completed
             if (!userData.profileCompleted) {
               router.push('/profile/complete');
               return;
             }
             
-            setUserProfile(userData);
+            // Fetch applications
+            fetchApplications(currentUser.uid);
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
+          setLoading(false);
         }
       } else {
         // Not logged in, redirect to login
@@ -49,120 +57,115 @@ export default function Applications() {
     return () => unsubscribe();
   }, [router]);
 
-  // Fetch applications when user is loaded
-  useEffect(() => {
-    if (!user) return;
-    
-    const fetchApplications = async () => {
-      try {
-        // For demonstration purposes (in a real app, this would fetch from Firebase)
-        // In a production app, you would have an 'applications' collection or similar
-        // Here we're simulating the functionality with local data
-        
-        // Example applications (these would be fetched from the database in a real app)
-        const mockApplications = [
-          {
-            id: '1',
-            jobId: '1',
-            jobTitle: 'Software Engineer',
-            company: 'Ministry of Electronics & IT',
-            location: 'Delhi',
-            applicationDate: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
-            status: 'Under Review',
-            coverLetter: 'I am writing to express my interest in the Software Engineer position at the Ministry of Electronics & IT...',
-            resume: 'https://example.com/resume.pdf',
-            lastStatusUpdate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString()
-          },
-          {
-            id: '2',
-            jobId: '3',
-            jobTitle: 'Web Development Intern',
-            company: 'National Informatics Centre',
-            location: 'Remote',
-            applicationDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-            status: 'Shortlisted',
-            coverLetter: 'I am excited to apply for the Web Development Internship at the National Informatics Centre...',
-            resume: 'https://example.com/resume.pdf',
-            lastStatusUpdate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
-          },
-          {
-            id: '3',
-            jobId: '5',
-            jobTitle: 'Network Security Engineer',
-            company: 'Defence Research and Development Organisation (DRDO)',
-            location: 'Hyderabad',
-            applicationDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-            status: 'Rejected',
-            coverLetter: 'I am applying for the Network Security Engineer position at DRDO...',
-            resume: 'https://example.com/resume.pdf',
-            lastStatusUpdate: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
-            feedback: 'Thank you for your application. While your profile is impressive, we are looking for candidates with more specific experience in defense systems security.'
-          }
-        ];
-        
+  const fetchApplications = async (userId) => {
+    try {
+      // For demonstration, we're using mock data
+      // In a real app, this would be fetched from Firestore
+      
+      // Mock data for applications
+      const mockApplications = [
+        {
+          id: 'app1',
+          jobId: '1',
+          jobTitle: 'Software Engineer',
+          company: 'Ministry of Electronics & IT',
+          location: 'Delhi',
+          applicationDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+          status: 'Under Review',
+          coverLetter: 'Dear Hiring Manager, I am writing to express my interest...',
+          resume: 'https://example.com/resume.pdf',
+          lastStatusUpdate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 'app2',
+          jobId: '5',
+          jobTitle: 'AI Research Engineer',
+          company: 'Defence Research and Development Organisation (DRDO)',
+          location: 'Hyderabad',
+          applicationDate: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+          status: 'Shortlisted',
+          coverLetter: 'Dear Hiring Team, I am interested in the AI Research position...',
+          resume: 'https://example.com/resume.pdf',
+          lastStatusUpdate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 'app3',
+          jobId: 'intern3',
+          jobTitle: 'Digital Marketing Intern',
+          company: 'Digital India Corporation',
+          location: 'Delhi',
+          applicationDate: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
+          status: 'Rejected',
+          coverLetter: 'Dear Recruitment Team, I would like to apply for the Digital Marketing Internship...',
+          resume: 'https://example.com/resume.pdf',
+          lastStatusUpdate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString()
+        }
+      ];
+      
+      // Simulate some users having no applications
+      // For demo purposes, randomly decide whether to show applications
+      const hasApplications = Math.random() > 0.3; // 70% chance of having applications
+      
+      if (hasApplications) {
         setApplications(mockApplications);
         setFilteredApplications(mockApplications);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching applications:", error);
-        setLoading(false);
+      } else {
+        setApplications([]);
+        setFilteredApplications([]);
       }
-    };
-    
-    fetchApplications();
-  }, [user]);
+      
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching applications:", error);
+      setLoading(false);
+      setNotification({
+        show: true,
+        type: 'error',
+        message: 'Error loading applications. Please try again.'
+      });
+    }
+  };
 
-  // Apply search and filters
-  useEffect(() => {
-    if (!applications.length) return;
+  // Handle search input
+  const handleSearch = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+    applyFilters(term, filterStatus);
+  };
+
+  // Handle status filter change
+  const handleStatusFilterChange = (e) => {
+    const status = e.target.value;
+    setFilterStatus(status);
+    applyFilters(searchTerm, status);
+  };
+
+  // Apply filters
+  const applyFilters = (term, status) => {
+    let results = [...applications];
     
-    let result = [...applications];
-    
-    // Apply search term
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase();
-      result = result.filter(app => 
-        app.jobTitle.toLowerCase().includes(term) || 
-        app.company.toLowerCase().includes(term) || 
-        app.location.toLowerCase().includes(term)
+    // Search term filter
+    if (term) {
+      const lowercaseTerm = term.toLowerCase();
+      results = results.filter(app => 
+        app.jobTitle.toLowerCase().includes(lowercaseTerm) ||
+        app.company.toLowerCase().includes(lowercaseTerm) ||
+        app.location.toLowerCase().includes(lowercaseTerm)
       );
     }
     
-    // Apply status filter
-    if (filterStatus !== 'all') {
-      result = result.filter(app => app.status.toLowerCase() === filterStatus.toLowerCase());
+    // Status filter
+    if (status !== 'all') {
+      results = results.filter(app => app.status === status);
     }
     
-    // Sort by application date (newest first)
-    result.sort((a, b) => new Date(b.applicationDate) - new Date(a.applicationDate));
-    
-    setFilteredApplications(result);
-  }, [applications, searchTerm, filterStatus]);
-
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
+    setFilteredApplications(results);
   };
 
-  const handleStatusFilterChange = (e) => {
-    setFilterStatus(e.target.value);
-  };
-
-  // Function to get appropriate badge color based on status
-  const getStatusBadgeColor = (status) => {
-    switch (status.toLowerCase()) {
-      case 'under review':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'shortlisted':
-        return 'bg-green-100 text-green-800';
-      case 'rejected':
-        return 'bg-red-100 text-red-800';
-      case 'interview scheduled':
-        return 'bg-blue-100 text-blue-800';
-      case 'offer received':
-        return 'bg-purple-100 text-purple-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
+  // Format date
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('en-US', options);
   };
 
   if (loading) {
@@ -173,149 +176,196 @@ export default function Applications() {
     );
   }
 
+  // Status badge color mapping
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Under Review':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'Shortlisted':
+        return 'bg-green-100 text-green-800';
+      case 'Interview Scheduled':
+        return 'bg-blue-100 text-blue-800';
+      case 'Offered':
+        return 'bg-purple-100 text-purple-800';
+      case 'Rejected':
+        return 'bg-red-100 text-red-800';
+      case 'Accepted':
+        return 'bg-indigo-100 text-indigo-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar user={user} />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <Notification
+        type={notification.type}
+        message={notification.message}
+        show={notification.show}
+        onClose={() => setNotification({ ...notification, show: false })}
+      />
+      
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-900">My Applications</h1>
         </div>
         
-        {/* Search and filter controls */}
-        <div className="bg-white p-4 rounded-lg shadow mb-6">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
-              <label htmlFor="search" className="sr-only">Search applications</label>
-              <div className="relative rounded-md shadow-sm">
-                <input
-                  type="text"
-                  name="search"
-                  id="search"
-                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-10 sm:text-sm border-gray-300 rounded-md"
-                  placeholder="Search applications by job title, company, or location"
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                />
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                  <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
-                  </svg>
+        {applications.length > 0 ? (
+          <>
+            {/* Search and filter controls */}
+            <div className="bg-white shadow rounded-lg p-4 mb-6">
+              <div className="flex flex-col md:flex-row gap-4">
+                {/* Search */}
+                <div className="flex-1">
+                  <label htmlFor="search-applications" className="sr-only">Search applications</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <input
+                      id="search-applications"
+                      className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      placeholder="Search by job title, company, or location"
+                      type="search"
+                      value={searchTerm}
+                      onChange={handleSearch}
+                    />
+                  </div>
+                </div>
+                
+                {/* Status filter */}
+                <div className="w-full md:w-64">
+                  <label htmlFor="status-filter" className="sr-only">Filter by status</label>
+                  <select
+                    id="status-filter"
+                    className="block w-full py-2 pl-3 pr-10 border border-gray-300 rounded-md leading-5 bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    value={filterStatus}
+                    onChange={handleStatusFilterChange}
+                  >
+                    <option value="all">All Statuses</option>
+                    <option value="Under Review">Under Review</option>
+                    <option value="Shortlisted">Shortlisted</option>
+                    <option value="Interview Scheduled">Interview Scheduled</option>
+                    <option value="Offered">Offered</option>
+                    <option value="Rejected">Rejected</option>
+                    <option value="Accepted">Accepted</option>
+                  </select>
                 </div>
               </div>
             </div>
             
-            <div>
-              <label htmlFor="status-filter" className="sr-only">Filter by status</label>
-              <select
-                id="status-filter"
-                name="status-filter"
-                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                value={filterStatus}
-                onChange={handleStatusFilterChange}
-              >
-                <option value="all">All Statuses</option>
-                <option value="under review">Under Review</option>
-                <option value="shortlisted">Shortlisted</option>
-                <option value="interview scheduled">Interview Scheduled</option>
-                <option value="offer received">Offer Received</option>
-                <option value="rejected">Rejected</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        
-        {/* Results count */}
-        <div className="mb-4">
-          <p className="text-sm text-gray-700">
-            Showing <span className="font-medium">{filteredApplications.length}</span> applications
-            {searchTerm && <span> for "<span className="font-medium">{searchTerm}</span>"</span>}
-            {filterStatus !== 'all' && <span> with status "<span className="font-medium">{filterStatus}</span>"</span>}
-          </p>
-        </div>
-        
-        {/* Applications list */}
-        <div className="space-y-4">
-          {filteredApplications.length > 0 ? (
-            filteredApplications.map(application => (
-              <div key={application.id} className="bg-white shadow overflow-hidden rounded-lg">
-                <div className="p-6">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-lg font-medium text-gray-900">{application.jobTitle}</h3>
-                      <p className="text-gray-600">{application.company}</p>
-                      <p className="text-gray-500 text-sm mt-1">{application.location}</p>
+            {/* Applications list */}
+            <div className="space-y-6">
+              {filteredApplications.length > 0 ? (
+                filteredApplications.map((application) => (
+                  <div key={application.id} className="bg-white shadow rounded-lg overflow-hidden">
+                    <div className="p-6">
+                      <div className="flex flex-col md:flex-row justify-between">
+                        <div>
+                          <h3 className="text-lg font-medium text-gray-900">{application.jobTitle}</h3>
+                          <p className="mt-1 text-sm text-gray-500">{application.company} • {application.location}</p>
+                        </div>
+                        <div className="mt-2 md:mt-0">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(application.status)}`}>
+                            {application.status}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <dt className="text-sm font-medium text-gray-500">Applied on</dt>
+                          <dd className="mt-1 text-sm text-gray-900">{formatDate(application.applicationDate)}</dd>
+                        </div>
+                        <div>
+                          <dt className="text-sm font-medium text-gray-500">Last updated</dt>
+                          <dd className="mt-1 text-sm text-gray-900">{formatDate(application.lastStatusUpdate)}</dd>
+                        </div>
+                        <div>
+                          <dt className="text-sm font-medium text-gray-500">Resume</dt>
+                          <dd className="mt-1 text-sm text-indigo-600 hover:text-indigo-500">
+                            <a href={application.resume} target="_blank" rel="noopener noreferrer" className="font-medium">
+                              View Resume
+                            </a>
+                          </dd>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-6 flex items-center justify-between">
+                        <Link 
+                          href={`/jobs/${application.jobId}`}
+                          className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                        >
+                          View Job Details
+                        </Link>
+                        
+                        <div className="flex space-x-3">
+                          <button 
+                            type="button"
+                            className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            onClick={() => {
+                              setNotification({
+                                show: true,
+                                type: 'info',
+                                message: 'Cover letter viewed.'
+                              });
+                            }}
+                          >
+                            View Cover Letter
+                          </button>
+                          
+                          {application.status === 'Interview Scheduled' && (
+                            <button 
+                              type="button"
+                              className="inline-flex items-center px-3 py-1.5 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                              onClick={() => {
+                                setNotification({
+                                  show: true,
+                                  type: 'info',
+                                  message: 'Interview details viewed.'
+                                });
+                              }}
+                            >
+                              View Interview Details
+                            </button>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                    
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeColor(application.status)}`}>
-                      {application.status}
-                    </span>
                   </div>
-                  
-                  <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <span className="text-sm font-medium text-gray-500">Application Date:</span>
-                      <span className="ml-2 text-sm text-gray-900">
-                        {new Date(application.applicationDate).toLocaleDateString()}
-                      </span>
-                    </div>
-                    
-                    <div>
-                      <span className="text-sm font-medium text-gray-500">Last Status Update:</span>
-                      <span className="ml-2 text-sm text-gray-900">
-                        {new Date(application.lastStatusUpdate).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  {application.feedback && (
-                    <div className="mt-4 p-3 bg-gray-50 rounded-md">
-                      <h4 className="text-sm font-medium text-gray-900">Feedback:</h4>
-                      <p className="mt-1 text-sm text-gray-500">{application.feedback}</p>
-                    </div>
-                  )}
-                  
-                  <div className="mt-6 flex justify-between items-center">
-                    <button
-                      type="button"
-                      onClick={() => router.push(`/jobs/${application.jobId}`)}
-                      className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                      View Job Details
-                    </button>
-                    
-                    <button
-                      type="button"
-                      onClick={() => router.push(`/jobs/applications/${application.id}`)}
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                      View Full Application
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="bg-white p-6 rounded-lg shadow text-center">
-              <p className="text-gray-500">No applications found matching your criteria.</p>
-              {filterStatus !== 'all' || searchTerm ? (
-                <p className="mt-2 text-sm text-gray-500">Try adjusting your filters or search terms.</p>
+                ))
               ) : (
-                <div>
-                  <p className="mt-2 text-sm text-gray-500">You haven't applied to any jobs yet.</p>
-                  <button
-                    type="button"
-                    onClick={() => router.push('/jobs')}
-                    className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  >
-                    Browse Jobs
-                  </button>
+                <div className="bg-white shadow rounded-lg p-6 text-center">
+                  <p className="text-gray-500">No applications match your search criteria.</p>
+                  <p className="mt-2 text-sm text-gray-500">Try adjusting your search or filter settings.</p>
                 </div>
               )}
             </div>
-          )}
-        </div>
-      </div>
+          </>
+        ) : (
+          <div className="bg-white shadow rounded-lg p-8 text-center">
+            <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <h3 className="mt-2 text-lg font-medium text-gray-900">You haven't applied for any jobs or internships yet</h3>
+            <p className="mt-1 text-sm text-gray-500">
+              When you apply for positions, they will appear here so you can track your applications.
+            </p>
+            <div className="mt-6">
+              <Link
+                href="/jobs"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Browse Jobs
+              </Link>
+            </div>
+          </div>
+        )}
+      </main>
     </div>
   );
 } 
