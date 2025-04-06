@@ -192,14 +192,11 @@ export default function RecommendationsPage() {
             <div className="grid grid-cols-1 gap-6">
               {recommendations.map((job) => (
                 <div key={job.id} className="relative">
-                  {/* Profile Match Badge */}
-                  <div className="absolute right-3 top-3 z-10 bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded-full">
-                    Profile Match: {Math.round(job.matchScore * 100)}%
-                  </div>
                   <JobCard
                     job={job}
                     saved={savedJobs.includes(job.id)}
                     onSaveToggle={handleSaveToggle}
+                    matchScore={Math.round(job.matchScore * 100)}
                   />
                 </div>
               ))}

@@ -8,6 +8,7 @@ export default function Navbar({ user }) {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -15,6 +16,13 @@ export default function Navbar({ user }) {
   
   const toggleProfileMenu = () => {
     setIsProfileMenuOpen(!isProfileMenuOpen);
+    if (isSettingsOpen) setIsSettingsOpen(false);
+  };
+  
+  const toggleSettings = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsSettingsOpen(!isSettingsOpen);
   };
   
   const handleSignOut = async () => {
@@ -23,6 +31,18 @@ export default function Navbar({ user }) {
       router.push('/auth/login');
     } catch (error) {
       console.error('Error signing out:', error);
+    }
+  };
+  
+  const handleDeleteAccount = async () => {
+    if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+      try {
+        // In a real app, this would delete the user account
+        await signOut(auth);
+        router.push('/auth/register?deleted=true');
+      } catch (error) {
+        console.error('Error deleting account:', error);
+      }
     }
   };
   
@@ -132,12 +152,29 @@ export default function Navbar({ user }) {
                       Your Profile
                     </Link>
                     
-                    <Link 
-                      href="/jobs/saved" 
+                    <Link
+                      href="/profile/details"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       role="menuitem"
                     >
-                      Saved Jobs
+                      Settings
+                    </Link>
+                    
+                    <button
+                      type="button"
+                      className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                      role="menuitem"
+                      onClick={handleDeleteAccount}
+                    >
+                      Delete My Account
+                    </button>
+                    
+                    <Link 
+                      href="/mentors" 
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      role="menuitem"
+                    >
+                      Your Mentors
                     </Link>
                     
                     <button
@@ -252,6 +289,35 @@ export default function Navbar({ user }) {
               >
                 AI Recommendations
               </Link>
+              
+              <Link 
+                href="/profile" 
+                className={`${isActive('/profile') ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
+              >
+                Your Profile
+              </Link>
+              
+              <Link 
+                href="/profile/details" 
+                className={`${isActive('/profile/details') ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium ml-4 text-sm`}
+              >
+                Account Details
+              </Link>
+              
+              <button
+                type="button"
+                className="block w-full text-left pl-7 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-red-600 hover:bg-gray-50 hover:border-gray-300"
+                onClick={handleDeleteAccount}
+              >
+                Delete My Account
+              </button>
+              
+              <Link 
+                href="/mentors/sessions" 
+                className={`${isActive('/mentors/sessions') ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
+              >
+                Your Mentors
+              </Link>
             </>
           )}
           
@@ -297,10 +363,25 @@ export default function Navbar({ user }) {
                 </Link>
                 
                 <Link 
-                  href="/jobs/saved" 
+                  href="/profile/details" 
                   className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
                 >
-                  Saved Jobs
+                  Settings
+                </Link>
+                
+                <button
+                  type="button"
+                  className="block w-full text-left px-4 py-2 text-base font-medium text-red-600 hover:text-red-800 hover:bg-gray-100"
+                  onClick={handleDeleteAccount}
+                >
+                  Delete My Account
+                </button>
+                
+                <Link 
+                  href="/mentors" 
+                  className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                >
+                  Your Mentors
                 </Link>
                 
                 <button

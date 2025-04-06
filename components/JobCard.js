@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-export default function JobCard({ job, saved, onSaveToggle, showMatchScore = false }) {
+export default function JobCard({ job, saved, onSaveToggle, showMatchScore = false, matchScore }) {
   const [expanded, setExpanded] = useState(false);
   
   const toggleExpanded = () => {
@@ -41,7 +41,7 @@ export default function JobCard({ job, saved, onSaveToggle, showMatchScore = fal
     e.stopPropagation();
     
     if (onSaveToggle) {
-      onSaveToggle(job.id, !saved);
+      onSaveToggle(job.id);
     }
   };
   
@@ -53,13 +53,20 @@ export default function JobCard({ job, saved, onSaveToggle, showMatchScore = fal
       <div className="bg-white shadow hover:shadow-md rounded-lg overflow-hidden transition duration-200 transform hover:-translate-y-1">
         <div className="p-6">
           <div className="flex justify-between items-start">
-            <div>
-              <h3 className="text-xl font-semibold text-gray-900">{job.title}</h3>
+            <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-semibold text-gray-900">{job.title}</h3>
+                {matchScore && (
+                  <span className="ml-2 bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded-full">
+                    Profile Match: {matchScore}%
+                  </span>
+                )}
+              </div>
               <p className="mt-1 text-sm text-gray-600">{job.company} • {job.location}</p>
             </div>
             <button
               onClick={handleSaveClick}
-              className="text-gray-400 hover:text-yellow-500 focus:outline-none transition-colors duration-200"
+              className="ml-4 flex-shrink-0 text-gray-400 hover:text-yellow-500 focus:outline-none transition-colors duration-200"
               aria-label={saved ? "Unsave job" : "Save job"}
             >
               {saved ? (
