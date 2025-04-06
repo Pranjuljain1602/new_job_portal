@@ -10,11 +10,13 @@ import { FaInstagram } from 'react-icons/fa/index.js';
 import { FaMoon } from 'react-icons/fa/index.js';
 import { FaSun } from 'react-icons/fa/index.js';
 import { useTheme } from '../context/ThemeContext';
+import Notification from '../components/Notification';
 
 export default function LandingPage() {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showAccountDeletedAlert, setShowAccountDeletedAlert] = useState(false);
   const { darkMode, toggleDarkMode } = useTheme();
 
   useEffect(() => {
@@ -25,6 +27,17 @@ export default function LandingPage() {
     
     return () => unsubscribe();
   }, []);
+
+  // Check for deleted account query parameter
+  useEffect(() => {
+    if (router.query.deleted === 'true') {
+      setShowAccountDeletedAlert(true);
+      
+      // Remove the query parameter without triggering a navigation
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, document.title, newUrl);
+    }
+  }, [router.query]);
 
   // If user is already logged in, redirect to jobs page
   useEffect(() => {
@@ -43,6 +56,15 @@ export default function LandingPage() {
 
   return (
     <div className="bg-white dark:bg-gray-900 transition-colors duration-300">
+      {/* Account Deleted Alert */}
+      <Notification 
+        type="success"
+        message="Your account has been successfully deleted."
+        show={showAccountDeletedAlert}
+        onClose={() => setShowAccountDeletedAlert(false)}
+        duration={5000}
+      />
+      
       {/* Header */}
       <header className="relative">
         <div className="bg-indigo-600">

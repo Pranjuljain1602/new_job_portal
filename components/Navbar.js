@@ -45,9 +45,9 @@ export default function Navbar({ user }) {
               </Link>
               
               <Link 
-                href="/internships" 
+                href="/jobs/internships" 
                 className={`${
-                  router.pathname === '/internships' 
+                  router.pathname === '/jobs/internships' 
                     ? 'border-indigo-500 text-gray-900' 
                     : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                 } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
@@ -56,9 +56,9 @@ export default function Navbar({ user }) {
               </Link>
               
               <Link 
-                href="/saved" 
+                href="/jobs/saved" 
                 className={`${
-                  router.pathname === '/saved' 
+                  router.pathname === '/jobs/saved' 
                     ? 'border-indigo-500 text-gray-900' 
                     : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                 } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
@@ -67,9 +67,9 @@ export default function Navbar({ user }) {
               </Link>
               
               <Link 
-                href="/applications" 
+                href="/jobs/applications" 
                 className={`${
-                  router.pathname === '/applications' 
+                  router.pathname === '/jobs/applications' 
                     ? 'border-indigo-500 text-gray-900' 
                     : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                 } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
@@ -206,9 +206,9 @@ export default function Navbar({ user }) {
             </Link>
             
             <Link
-              href="/internships"
+              href="/jobs/internships"
               className={`${
-                router.pathname === '/internships'
+                router.pathname === '/jobs/internships'
                   ? 'bg-indigo-50 border-indigo-500 text-indigo-700'
                   : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'
               } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
@@ -218,9 +218,9 @@ export default function Navbar({ user }) {
             </Link>
             
             <Link
-              href="/saved"
+              href="/jobs/saved"
               className={`${
-                router.pathname === '/saved'
+                router.pathname === '/jobs/saved'
                   ? 'bg-indigo-50 border-indigo-500 text-indigo-700'
                   : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'
               } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
@@ -230,9 +230,9 @@ export default function Navbar({ user }) {
             </Link>
             
             <Link
-              href="/applications"
+              href="/jobs/applications"
               className={`${
-                router.pathname === '/applications'
+                router.pathname === '/jobs/applications'
                   ? 'bg-indigo-50 border-indigo-500 text-indigo-700'
                   : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'
               } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
@@ -250,12 +250,8 @@ export default function Navbar({ user }) {
                 </div>
               </div>
               <div className="ml-3">
-                <div className="text-base font-medium text-gray-800">
-                  {user?.displayName || 'User'}
-                </div>
-                <div className="text-sm font-medium text-gray-500">
-                  {user?.email || ''}
-                </div>
+                <div className="text-base font-medium text-gray-800">{user?.displayName || 'User'}</div>
+                <div className="text-sm font-medium text-gray-500">{user?.email || ''}</div>
               </div>
             </div>
             <div className="mt-3 space-y-1">

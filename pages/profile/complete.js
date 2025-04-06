@@ -90,14 +90,8 @@ export default function ProfileComplete() {
     if (hasCompleteEducation) completedFields++;
     totalFields++;
     
-    // Experience is optional, but if provided should be complete
-    if (profileData.experience.length > 0) {
-      const hasCompleteExperience = profileData.experience.some(
-        exp => exp.company && exp.position && exp.startDate
-      );
-      if (hasCompleteExperience) completedFields++;
-      totalFields++;
-    }
+    // Experience is completely optional and doesn't count toward completion percentage
+    // Remove this section from completion calculation
     
     const percentage = Math.floor((completedFields / totalFields) * 100);
     setCompletionPercentage(percentage);
@@ -475,8 +469,8 @@ export default function ProfileComplete() {
           </div>
 
           {/* Experience (Optional) */}
-          <div>
-            <h2 className="text-xl font-semibold text-gray-900 border-b pb-2">Experience (Optional)</h2>
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold text-gray-900 border-b pb-2">Experience (Optional - Not required for profile completion)</h2>
             
             {profileData.experience.map((exp, index) => (
               <div key={index} className="mt-4 p-4 border border-gray-200 rounded-md">
