@@ -21,6 +21,20 @@ export default function ProfileComplete() {
   const [interestInput, setInterestInput] = useState('');
   const [profileInsights, setProfileInsights] = useState(null);
 
+  // Initialize with some common skill suggestions
+  const [commonSkillSuggestions, setCommonSkillSuggestions] = useState([
+    'JavaScript', 'HTML/CSS', 'React', 'Node.js', 'Python', 
+    'Java', 'SQL', 'Data Analysis', 'Machine Learning', 'Project Management',
+    'UI/UX Design', 'Cloud Computing', 'AWS', 'DevOps', 'Git'
+  ]);
+
+  // Initialize with common interest suggestions
+  const [commonInterestSuggestions, setCommonInterestSuggestions] = useState([
+    'Web Development', 'Mobile App Development', 'Data Science', 'Artificial Intelligence',
+    'Machine Learning', 'Cloud Computing', 'Cybersecurity', 'UI/UX Design',
+    'Game Development', 'Blockchain', 'IoT', 'DevOps'
+  ]);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
@@ -303,6 +317,57 @@ export default function ProfileComplete() {
                 </button>
               </div>
               
+              {/* Common Skills Suggestions */}
+              <div className="mt-4 mb-4">
+                <p className="text-sm font-medium text-gray-700 mb-2">Common skills (click to add):</p>
+                <div className="flex flex-wrap gap-2">
+                  {commonSkillSuggestions
+                    .filter(skill => !profileData.skills.includes(skill))
+                    .slice(0, 10)
+                    .map((skill, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => {
+                          setProfileData({
+                            ...profileData,
+                            skills: [...profileData.skills, skill]
+                          });
+                        }}
+                        className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      >
+                        + {skill}
+                      </button>
+                    ))}
+                </div>
+              </div>
+              
+              {/* Skills Recommendations from interests */}
+              {profileInsights && profileInsights.recommendedSkills && profileInsights.recommendedSkills.length > 0 && (
+                <div className="mt-2 mb-4 bg-blue-50 p-3 rounded-md border border-blue-100">
+                  <p className="text-sm font-medium text-blue-800 mb-2">Recommended skills based on your interests:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {profileInsights.recommendedSkills.map((skill, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => {
+                          if (!profileData.skills.includes(skill)) {
+                            setProfileData({
+                              ...profileData,
+                              skills: [...profileData.skills, skill]
+                            });
+                          }
+                        }}
+                        className="inline-flex items-center px-2.5 py-1.5 border border-blue-300 shadow-sm text-xs font-medium rounded text-blue-700 bg-blue-50 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      >
+                        + {skill}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
               <div className="mt-2 flex flex-wrap gap-2">
                 {profileData.skills.map((skill, index) => (
                   <span 
@@ -343,6 +408,31 @@ export default function ProfileComplete() {
                 >
                   Add
                 </button>
+              </div>
+              
+              {/* Common Interest Suggestions */}
+              <div className="mt-4 mb-4">
+                <p className="text-sm font-medium text-gray-700 mb-2">Common interests (click to add):</p>
+                <div className="flex flex-wrap gap-2">
+                  {commonInterestSuggestions
+                    .filter(interest => !profileData.interests.includes(interest))
+                    .slice(0, 10)
+                    .map((interest, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => {
+                          setProfileData({
+                            ...profileData,
+                            interests: [...profileData.interests, interest]
+                          });
+                        }}
+                        className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      >
+                        + {interest}
+                      </button>
+                    ))}
+                </div>
               </div>
               
               <div className="mt-2 flex flex-wrap gap-2">

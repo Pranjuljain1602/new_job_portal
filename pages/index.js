@@ -71,8 +71,8 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto py-3 px-3 sm:px-6 lg:px-8">
             <div className="text-center sm:px-16">
               <p className="font-medium text-white">
-                <span className="md:hidden">AICTE-Approved Jobs Portal!</span>
-                <span className="hidden md:inline">Looking for AICTE-approved government jobs and internships? You're in the right place!</span>
+                <span className="md:hidden">AI-Powered Jobs Portal!</span>
+                <span className="hidden md:inline">Looking for AI-powered jobs and internships? Start your career journey today!</span>
                 <span className="block sm:ml-2 sm:inline-block">
                   <Link href="/auth/register" className="text-white font-bold underline hover:text-indigo-200 transition-colors duration-300">
                     Sign up now <span aria-hidden="true">&rarr;</span>
@@ -86,7 +86,16 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex justify-between items-center py-6 md:justify-start md:space-x-10">
             <div className="flex justify-start lg:w-0 lg:flex-1">
-              <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 animate-pulse-slow">AICTE Jobs Portal</span>
+              <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 animate-pulse-slow">
+                <span className="flex items-center">
+                  <svg viewBox="0 0 24 24" className="h-8 w-8 mr-2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4L4 8L12 12L20 8L12 4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M4 12L12 16L20 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M4 16L12 20L20 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  HirEdge
+                </span>
+              </span>
             </div>
             
             <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0 space-x-4">
@@ -148,10 +157,10 @@ export default function LandingPage() {
               <div className="relative px-4 py-16 sm:px-6 sm:py-24 lg:py-32 lg:px-8">
                 <h1 className="text-center text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl animate-fade-in">
                   <span className="block text-white">Find Your Perfect</span>
-                  <span className="block text-indigo-200 animate-pulse-slow">AICTE-Approved Job</span>
+                  <span className="block text-indigo-200 animate-pulse-slow">Career Match</span>
                 </h1>
                 <p className="mt-6 max-w-lg mx-auto text-center text-xl text-indigo-200 sm:max-w-3xl animate-fade-in-up">
-                  Our AI-powered platform matches your skills, interests, and experience with AICTE-approved government jobs and internships.
+                  Discover jobs and internships that perfectly fit your skills and interests — powered by AI.
                 </p>
                 <div className="mt-10 max-w-sm mx-auto sm:max-w-none sm:flex sm:justify-center">
                   <div className="space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5">
@@ -456,9 +465,18 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
             {/* Logo and description */}
             <div className="col-span-2 animate-fade-in">
-              <h2 className="text-xl font-bold text-indigo-600 dark:text-indigo-400 transition-colors duration-300">AICTE Jobs Portal</h2>
+              <h2 className="text-xl font-bold text-indigo-600 dark:text-indigo-400 transition-colors duration-300">
+                <span className="flex items-center">
+                  <svg viewBox="0 0 24 24" className="h-6 w-6 mr-2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4L4 8L12 12L20 8L12 4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M4 12L12 16L20 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M4 16L12 20L20 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  HirEdge
+                </span>
+              </h2>
               <p className="mt-4 text-gray-600 dark:text-gray-300 text-sm transition-colors duration-300">
-                Connecting talented individuals with AICTE-approved government jobs and internships through AI-powered recommendations.
+                Connecting talented individuals with the perfect career opportunities through AI-powered recommendations.
               </p>
               <div className="mt-6 flex space-x-6">
                 <a href="https://twitter.com" className="text-gray-400 hover:text-indigo-500 dark:hover:text-indigo-400 transition-all duration-300 transform hover:scale-110">
@@ -542,10 +560,10 @@ export default function LandingPage() {
 
           <div className="mt-12 border-t border-gray-200 dark:border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-base text-gray-400 dark:text-gray-300 transition-colors duration-300">
-              &copy; {new Date().getFullYear()} AICTE Jobs Portal. All rights reserved.
+              &copy; {new Date().getFullYear()} HirEdge. All rights reserved.
             </p>
             <p className="mt-4 md:mt-0 text-sm text-gray-500 dark:text-gray-400 transition-colors duration-300">
-              Designed and built with ❤️ InnovateX
+              Designed and built with ❤️ by InnovateX
             </p>
           </div>
         </div>

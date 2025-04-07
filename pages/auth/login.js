@@ -72,6 +72,7 @@ export default function Login() {
                   name="password"
                   type="password"
                   autoComplete="current-password"
+                  placeholder="Enter your password (minimum 6 characters)"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

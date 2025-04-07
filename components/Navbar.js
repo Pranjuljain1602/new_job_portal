@@ -58,7 +58,7 @@ export default function Navbar({ user }) {
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
               <Link href="/" className="text-indigo-600 font-bold text-xl">
-                AICTE Jobs Portal
+                HirEdge
               </Link>
             </div>
             
