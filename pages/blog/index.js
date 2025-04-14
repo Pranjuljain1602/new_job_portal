@@ -9,6 +9,7 @@ import { FaSearch } from 'react-icons/fa/index.js';
 import { FaTag } from 'react-icons/fa/index.js';
 import { FaArrowRight } from 'react-icons/fa/index.js';
 import { useTheme } from '../../context/ThemeContext';
+import BackToHomeButton from '../../components/BackToHomeButton';
 
 // Blog post data with real content
 const blogPosts = [
@@ -19,7 +20,7 @@ const blogPosts = [
     excerpt: 'Learn proven strategies to stand out in competitive government job interviews and increase your chances of success.',
     author: 'Priya Sharma',
     authorRole: 'Former UPSC Interview Panelist',
-    date: 'August 15, 2023',
+    date: 'August 15, 2025',
     readTime: '8 min read',
     category: 'Interview Tips',
     image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80'
@@ -31,7 +32,7 @@ const blogPosts = [
     excerpt: 'Modern job applications often go through Applicant Tracking Systems before human reviewers. Learn how to optimize your resume for ATS success.',
     author: 'Vikram Mehta',
     authorRole: 'HR Technology Specialist',
-    date: 'July 22, 2023',
+    date: 'July 22, 2025',
     readTime: '6 min read',
     category: 'Resume',
     image: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
@@ -43,7 +44,7 @@ const blogPosts = [
     excerpt: 'Artificial intelligence is transforming how government agencies recruit talent. Learn how AI is being used and how candidates can adapt.',
     author: 'Dr. Rajesh Kumar',
     authorRole: 'Digital Governance Specialist',
-    date: 'June 10, 2023',
+    date: 'June 10, 2025',
     readTime: '7 min read',
     category: 'Technology',
     image: 'https://images.unsplash.com/photo-1580894732444-8ecded7900cd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
@@ -55,7 +56,7 @@ const blogPosts = [
     excerpt: 'Government research laboratories offer unique internship opportunities. Discover how to find and secure these valuable experiences.',
     author: 'Anika Patel',
     authorRole: 'ISRO Internship Coordinator',
-    date: 'May 5, 2023',
+    date: 'May 5, 2025',
     readTime: '9 min read',
     category: 'Internships',
     image: 'https://images.unsplash.com/photo-1581093588401-fbb62a02f120?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
@@ -67,7 +68,7 @@ const blogPosts = [
     excerpt: 'Effective networking is crucial even in government job searches. Learn strategic approaches to build connections in the public sector.',
     author: 'Sanjay Kapoor',
     authorRole: 'Career Counselor',
-    date: 'April 18, 2023',
+    date: 'April 18, 2025',
     readTime: '5 min read',
     category: 'Career Strategy',
     image: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80'
@@ -79,7 +80,7 @@ const blogPosts = [
     excerpt: 'Technical roles in government agencies often require coding assessments. Learn how to prepare and excel in these specialized tests.',
     author: 'Arjun Reddy',
     authorRole: 'Software Engineer at NIC',
-    date: 'March 7, 2023',
+    date: 'March 7, 2025',
     readTime: '10 min read',
     category: 'Technical Skills',
     image: 'https://images.unsplash.com/photo-1555099962-4199c345e5dd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
@@ -107,11 +108,13 @@ export default function Blog() {
   return (
     <>
       <Head>
-        <title>Blog | AICTE Jobs Portal</title>
-        <meta name="description" content="Career insights, interview tips, and job search strategies for AICTE-approved opportunities" />
+        <title>Blog | HirEdge</title>
+        <meta name="description" content="Career insights, interview tips, and job search strategies for your next career move" />
       </Head>
 
       <div className="bg-white dark:bg-gray-900 transition-colors duration-300">
+        <BackToHomeButton />
+        
         {/* Hero Section with Featured Post */}
         <div className="relative bg-indigo-800 dark:bg-indigo-900">
           <div className="absolute inset-0">

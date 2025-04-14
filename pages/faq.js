@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Head from 'next/head';
 import { FaPlus, FaMinus, FaSearch } from 'react-icons/fa/index.js';
 import { useTheme } from '../context/ThemeContext';
+import BackToHomeButton from '../components/BackToHomeButton';
 
 export default function FAQ() {
   const { darkMode } = useTheme();
@@ -136,149 +137,153 @@ export default function FAQ() {
   const filteredFaqs = filterFaqs();
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <>
       <Head>
-        <title>FAQ | AICTE Jobs Portal</title>
-        <meta name="description" content="Frequently Asked Questions about the AICTE Jobs Portal - Find answers to common questions about our platform, job recommendations, and more." />
+        <title>Frequently Asked Questions | HirEdge</title>
+        <meta name="description" content="Find answers to common questions about HirEdge" />
       </Head>
-
-      <main className="py-16">
-        {/* Hero Section */}
-        <div className="relative bg-indigo-800 dark:bg-indigo-900 transition-colors duration-300">
-          <div className="absolute inset-0">
-            <img
-              className="w-full h-full object-cover opacity-20"
-              src="/images/faq-hero.jpg"
-              alt="FAQ background"
-            />
-            <div className="absolute inset-0 bg-indigo-800 dark:bg-indigo-900 mix-blend-multiply" />
-          </div>
-          <div className="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
-            <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl animate-fade-in">
-              Frequently Asked Questions
-            </h1>
-            <p className="mt-6 text-xl text-indigo-100 max-w-3xl animate-fade-in-up">
-              Find answers to common questions about our platform, job recommendations, and more.
-            </p>
-          </div>
-        </div>
-
-        {/* FAQ Content */}
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
-          {/* Search Bar */}
-          <div className="relative mb-8 animate-fade-in">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <FaSearch className={`h-5 w-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+      
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+        <BackToHomeButton />
+        
+        <main className="py-16">
+          {/* Hero Section */}
+          <div className="relative bg-indigo-800 dark:bg-indigo-900 transition-colors duration-300">
+            <div className="absolute inset-0">
+              <img
+                className="w-full h-full object-cover opacity-20"
+                src="/images/faq-hero.jpg"
+                alt="FAQ background"
+              />
+              <div className="absolute inset-0 bg-indigo-800 dark:bg-indigo-900 mix-blend-multiply" />
             </div>
-            <input
-              type="text"
-              className={`pl-10 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-4 transition-colors duration-300 ${
-                darkMode 
-                  ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                  : 'bg-white border-gray-300 text-gray-900'
-              }`}
-              placeholder="Search for questions or keywords..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+            <div className="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
+              <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl animate-fade-in">
+                Frequently Asked Questions
+              </h1>
+              <p className="mt-6 text-xl text-indigo-100 max-w-3xl animate-fade-in-up">
+                Find answers to common questions about our platform, job recommendations, and more.
+              </p>
+            </div>
           </div>
 
-          {/* FAQ Sections */}
-          {filteredFaqs.length > 0 ? (
-            filteredFaqs.map((category, categoryIndex) => (
-              category.questions.length > 0 && (
-                <div key={categoryIndex} className="mb-12 animate-fade-in-up" style={{ animationDelay: `${categoryIndex * 100}ms` }}>
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 transition-colors duration-300">
-                    {category.category}
-                  </h2>
-                  <div className="space-y-4">
-                    {category.questions.map((faq, faqIndex) => {
-                      const globalIndex = categoryIndex * 100 + faqIndex;
-                      return (
-                        <div 
-                          key={faqIndex} 
-                          className={`bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden transition-all duration-300 ${
-                            openFaqIndex === globalIndex ? 'ring-2 ring-indigo-500' : ''
-                          }`}
-                        >
-                          <button
-                            onClick={() => toggleFaq(globalIndex)}
-                            className="w-full text-left px-6 py-4 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-300"
-                          >
-                            <h3 className="text-lg font-medium text-gray-900 dark:text-white transition-colors duration-300">
-                              {faq.question}
-                            </h3>
-                            <span>
-                              {openFaqIndex === globalIndex ? 
-                                <FaMinus className="h-5 w-5 text-indigo-600 dark:text-indigo-400 transition-colors duration-300" /> : 
-                                <FaPlus className="h-5 w-5 text-indigo-600 dark:text-indigo-400 transition-colors duration-300" />
-                              }
-                            </span>
-                          </button>
+          {/* FAQ Content */}
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+            {/* Search Bar */}
+            <div className="relative mb-8 animate-fade-in">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <FaSearch className={`h-5 w-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+              </div>
+              <input
+                type="text"
+                className={`pl-10 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-4 transition-colors duration-300 ${
+                  darkMode 
+                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                    : 'bg-white border-gray-300 text-gray-900'
+                }`}
+                placeholder="Search for questions or keywords..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+
+            {/* FAQ Sections */}
+            {filteredFaqs.length > 0 ? (
+              filteredFaqs.map((category, categoryIndex) => (
+                category.questions.length > 0 && (
+                  <div key={categoryIndex} className="mb-12 animate-fade-in-up" style={{ animationDelay: `${categoryIndex * 100}ms` }}>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 transition-colors duration-300">
+                      {category.category}
+                    </h2>
+                    <div className="space-y-4">
+                      {category.questions.map((faq, faqIndex) => {
+                        const globalIndex = categoryIndex * 100 + faqIndex;
+                        return (
                           <div 
-                            className={`px-6 overflow-hidden transition-all duration-300 ${
-                              openFaqIndex === globalIndex ? 'max-h-96 py-4' : 'max-h-0 py-0'
+                            key={faqIndex} 
+                            className={`bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden transition-all duration-300 ${
+                              openFaqIndex === globalIndex ? 'ring-2 ring-indigo-500' : ''
                             }`}
                           >
-                            <p className="text-gray-600 dark:text-gray-300 transition-colors duration-300">
-                              {faq.answer}
-                            </p>
+                            <button
+                              onClick={() => toggleFaq(globalIndex)}
+                              className="w-full text-left px-6 py-4 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-300"
+                            >
+                              <h3 className="text-lg font-medium text-gray-900 dark:text-white transition-colors duration-300">
+                                {faq.question}
+                              </h3>
+                              <span>
+                                {openFaqIndex === globalIndex ? 
+                                  <FaMinus className="h-5 w-5 text-indigo-600 dark:text-indigo-400 transition-colors duration-300" /> : 
+                                  <FaPlus className="h-5 w-5 text-indigo-600 dark:text-indigo-400 transition-colors duration-300" />
+                                }
+                              </span>
+                            </button>
+                            <div 
+                              className={`px-6 overflow-hidden transition-all duration-300 ${
+                                openFaqIndex === globalIndex ? 'max-h-96 py-4' : 'max-h-0 py-0'
+                              }`}
+                            >
+                              <p className="text-gray-600 dark:text-gray-300 transition-colors duration-300">
+                                {faq.answer}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              )
-            ))
-          ) : (
-            <div className="text-center py-12 animate-fade-in">
-              <svg 
-                className={`mx-auto h-12 w-12 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor" 
-                aria-hidden="true"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={1.5} 
-                  d="M9.663 17h4.673M12 12v5m0 0l-3-3m3 3l3-3m-8-3a4 4 0 11-8 0 4 4 0 018 0zm9.75 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-8.25 6.75a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" 
-                />
-              </svg>
-              <h3 className="mt-2 text-xl font-medium text-gray-900 dark:text-white transition-colors duration-300">
-                No results found
-              </h3>
-              <p className="mt-1 text-gray-500 dark:text-gray-400 transition-colors duration-300">
-                We couldn't find any FAQs matching your search. Try using different keywords or browse all questions.
-              </p>
-              <button 
-                onClick={() => setSearchTerm('')}
-                className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300"
-              >
-                Clear search
-              </button>
-            </div>
-          )}
+                )
+              ))
+            ) : (
+              <div className="text-center py-12 animate-fade-in">
+                <svg 
+                  className={`mx-auto h-12 w-12 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor" 
+                  aria-hidden="true"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={1.5} 
+                    d="M9.663 17h4.673M12 12v5m0 0l-3-3m3 3l3-3m-8-3a4 4 0 11-8 0 4 4 0 018 0zm9.75 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-8.25 6.75a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" 
+                  />
+                </svg>
+                <h3 className="mt-2 text-xl font-medium text-gray-900 dark:text-white transition-colors duration-300">
+                  No results found
+                </h3>
+                <p className="mt-1 text-gray-500 dark:text-gray-400 transition-colors duration-300">
+                  We couldn't find any FAQs matching your search. Try using different keywords or browse all questions.
+                </p>
+                <button 
+                  onClick={() => setSearchTerm('')}
+                  className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300"
+                >
+                  Clear search
+                </button>
+              </div>
+            )}
 
-          {/* Still have questions */}
-          <div className="mt-16 bg-indigo-50 dark:bg-indigo-900 rounded-lg shadow-md p-8 text-center animate-fade-in transition-colors duration-300">
-            <h2 className="text-2xl font-bold text-indigo-800 dark:text-indigo-300 mb-4 transition-colors duration-300">
-              Still have questions?
-            </h2>
-            <p className="text-indigo-700 dark:text-indigo-200 mb-6 transition-colors duration-300">
-              If you couldn't find the answer to your question, feel free to reach out to our support team.
-            </p>
-            <a 
-              href="/contact" 
-              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 transform hover:scale-105"
-            >
-              Contact Support
-            </a>
+            {/* Still have questions */}
+            <div className="mt-16 bg-indigo-50 dark:bg-indigo-900 rounded-lg shadow-md p-8 text-center animate-fade-in transition-colors duration-300">
+              <h2 className="text-2xl font-bold text-indigo-800 dark:text-indigo-300 mb-4 transition-colors duration-300">
+                Still have questions?
+              </h2>
+              <p className="text-indigo-700 dark:text-indigo-200 mb-6 transition-colors duration-300">
+                If you couldn't find the answer to your question, feel free to reach out to our support team.
+              </p>
+              <a 
+                href="/contact" 
+                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 transform hover:scale-105"
+              >
+                Contact Support
+              </a>
+            </div>
           </div>
-        </div>
-      </main>
-    </div>
+        </main>
+      </div>
+    </>
   );
 } 

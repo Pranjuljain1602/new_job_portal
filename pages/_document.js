@@ -11,7 +11,7 @@ class MyDocument extends Document {
           <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
           
           {/* Favicon */}
-          <link rel="icon" href="/favicon.ico" />
+          <link rel="icon" href="/favicon-new/favicon.svg" type="image/svg+xml" />
         </Head>
         <body>
           {/* Script to check dark mode preference before page loads to prevent flash */}

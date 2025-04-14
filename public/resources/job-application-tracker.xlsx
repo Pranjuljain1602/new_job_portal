@@ -1,0 +1,15 @@
+Job Application Tracker
+
+Company Name,Position,Application Date,Application Status,Contact Person,Contact Email,Interview Date,Follow-up Date,Notes
+Example Company,Software Engineer,01/15/2025,Interview Scheduled,John Doe,john.doe@example.com,01/20/2025,01/22/2025,"Had a great phone screening, moving to technical interview"
+TechCorp,Product Manager,01/10/2025,Applied,Sarah Smith,s.smith@techcorp.com,,01/17/2025,"Submitted application through company website, customized cover letter"
+Global Solutions,UX Designer,01/05/2025,Rejected,,,,,Applied through LinkedIn Easy Apply
+Innovative Inc,Full Stack Developer,12/28/2024,Second Interview,Michael Johnson,mjohnson@innovative.com,01/25/2025,01/27/2025,"First interview went well, technical assessment score: 92%"
+NextGen Systems,Data Analyst,01/12/2025,Phone Screening,Laura Williams,l.williams@nextgen.com,01/18/2025,,"Recruiter reached out via LinkedIn message"
+
+Instructions:
+1. Update this tracker regularly as your applications progress
+2. Status options: Applied, Phone Screening, Interview Scheduled, Second Interview, Final Interview, Offer Received, Rejected, Accepted, Declined
+3. Set calendar reminders for interviews and follow-ups
+4. Use the Notes column to track important details like interview feedback, salary discussions, etc.
+5. Color-code rows based on priority or status (e.g., green for active prospects, yellow for pending, red for closed) 

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
+import BackToHomeButton from '../components/BackToHomeButton';
 
 // Mentor data with realistic information
 const mentors = [
@@ -10,7 +11,7 @@ const mentors = [
     name: 'Dr. Arun Sharma',
     role: 'Software Development Expert',
     company: 'Former CTO at TCS',
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    image: 'https://randomuser.me/api/portraits/men/77.jpg',
     description: 'With over 20 years of experience in software development, Dr. Sharma specializes in guiding students through technical interviews and career progression in top tech companies.',
     expertise: ['Technical Interviews', 'Software Architecture', 'Career Planning'],
     rating: 4.9,
@@ -21,7 +22,7 @@ const mentors = [
     name: 'Neha Gupta',
     role: 'HR & Recruitment Specialist',
     company: 'Infosys',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    image: 'https://randomuser.me/api/portraits/women/66.jpg',
     description: 'Neha has helped hundreds of students improve their resumes and interview skills. She provides insider knowledge on what top companies look for in candidates.',
     expertise: ['Resume Building', 'HR Interviews', 'Personal Branding'],
     rating: 4.8,
@@ -32,7 +33,7 @@ const mentors = [
     name: 'Ravi Kumar',
     role: 'Data Science Mentor',
     company: 'Amazon',
-    image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    image: 'https://randomuser.me/api/portraits/men/41.jpg',
     description: 'Ravi specializes in guiding students and professionals into data science careers. He focuses on practical skills and portfolio building to help you stand out in the job market.',
     expertise: ['Data Science', 'Machine Learning', 'Python', 'Portfolio Development'],
     rating: 4.7,
@@ -43,7 +44,7 @@ const mentors = [
     name: 'Dr. Priya Mehta',
     role: 'Academic Counselor',
     company: 'IIT Delhi',
-    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    image: 'https://randomuser.me/api/portraits/women/79.jpg',
     description: 'As a professor at IIT Delhi, Dr. Mehta helps students navigate their academic journey and transition into the professional world with confidence.',
     expertise: ['Academic Planning', 'Research Guidance', 'Higher Education'],
     rating: 4.9,
@@ -54,7 +55,7 @@ const mentors = [
     name: 'Vikram Singhania',
     role: 'Government Job Expert',
     company: 'Former UPSC Member',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    image: 'https://randomuser.me/api/portraits/men/13.jpg',
     description: 'Having served as a UPSC member, Vikram provides expert guidance on preparing for and excelling in government job examinations and interviews.',
     expertise: ['Government Exams', 'Public Sector Interviews', 'UPSC Preparation'],
     rating: 4.8,
@@ -65,7 +66,7 @@ const mentors = [
     name: 'Anjali Desai',
     role: 'Startup & Entrepreneurship Coach',
     company: 'Founder of TechStart India',
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    image: 'https://randomuser.me/api/portraits/women/90.jpg',
     description: 'Anjali guides students interested in the startup ecosystem, helping them develop entrepreneurial skills or find the right roles in growing startups.',
     expertise: ['Entrepreneurship', 'Startup Jobs', 'Innovation', 'Business Development'],
     rating: 4.6,
@@ -97,11 +98,13 @@ export default function Mentors() {
   return (
     <>
       <Head>
-        <title>Expert Mentors | AICTE Jobs Portal</title>
+        <title>Expert Mentors | HirEdge</title>
         <meta name="description" content="Connect with experienced mentors to guide your career journey" />
       </Head>
 
-      <div className="bg-white dark:bg-gray-900 transition-colors duration-300">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+        <BackToHomeButton />
+        
         {/* Success notification */}
         {bookingSuccess && (
           <div className="fixed top-24 right-4 z-50 animate-slide-up transform transition-all duration-500 ease-in-out">

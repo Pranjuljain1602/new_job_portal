@@ -6,6 +6,7 @@ import { FaLinkedin } from 'react-icons/fa/index.js';
 import { FaTwitter } from 'react-icons/fa/index.js';
 import { FaFacebook } from 'react-icons/fa/index.js';
 import { useTheme } from '../context/ThemeContext';
+import BackToHomeButton from '../components/BackToHomeButton';
 
 export default function Contact() {
   const { darkMode } = useTheme();
@@ -94,6 +95,7 @@ export default function Contact() {
       </Head>
 
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+        <BackToHomeButton />
         <main className="py-16">
           {/* Hero Section */}
           <div className="relative bg-indigo-800 dark:bg-indigo-900 transition-colors duration-300">
